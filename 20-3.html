@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Gallery</title>
+<link rel="stylesheet" href="b15css2.css">
+</head>
+
+<body>
+
+<div class="gallery">
+    <button class="prev">❮</button>
+
+    <div class="image-container">
+
+  <div class="card">
+    <img src="img6.jpg" onclick="zoomImage(this)">
+  </div>
+
+  <div class="card">
+    <img src="a3.jpg" onclick="zoomImage(this)">
+  </div>
+
+  <div class="card">
+    <img src="img3.jpg" onclick="zoomImage(this)">
+  </div>
+
+  <div class="card">
+    <img src="img4.jpg" onclick="zoomImage(this)">
+  </div>
+
+</div>
+
+    <button class="next">❯</button>
+</div>
+
+<div id="overlay" onclick="closeZoom()">
+    <img id="zoomed">
+</div>
+
+<script src="b15jv.js"></script>
+
+</body>
+</html>
