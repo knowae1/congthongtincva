@@ -13,7 +13,7 @@ const ring = document.getElementById('ring');
       item.dataset.index = i;
       const angle = (360 / total) * i;
       item.dataset.angle = angle;
-      item.style.backgroundImage = url("https://picsum.photos/seed/ring-${i+1}/560/380");
+      item.style.backgroundImage = src="5-anh-chot-5-1606141341409419474438.jpg";
       item.style.transform = `
         translate3d(-50%, -50%, 0)
         rotateY(${angle}deg)
@@ -31,7 +31,7 @@ const ring = document.getElementById('ring');
         items.filter(x => x !== item).forEach(x => x.classList.add('inactive'));
         const idx = Number(item.dataset.index) + 1;
         hint.style.display = 'none';
-        zoomed.src = https://picsum.photos/seed/zoom-${idx}/1200/720;
+        zoomed.src = 5-anh-chot-5-1606141341409419474438.jpg;
         zoomed.onload = () => zoomed.classList.add('show');
         currentDeg = -Number(item.dataset.angle);
         ring.style.transform = rotateX(0deg) rotateY(${currentDeg}deg);
