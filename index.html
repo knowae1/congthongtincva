@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>suck my dih</title>
+  <title>8/3 Celebration - Rose, Fireworks & Balloons</title>
   <style>
     * { box-sizing: border-box; }
     body { 
@@ -143,14 +143,72 @@
     }
     #lightbox-overlay.active #lightbox-content { transform: scale(1); opacity: 1; }
 
-    .polaroid-frame {
-      background: white;
-      padding: 12px 12px 35px 12px;
-      box-shadow: 0 20px 30px rgba(0, 0, 0, 0.5);
-      border-radius: 4px;
-      display: inline-block;
-      max-width: 60vw;
-    }
+   .polaroid-frame {
+  background: rgb(255, 255, 255);
+  padding: 16px 16px 42px 16px;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  box-shadow: 
+    0 20px 30px rgba(0, 0, 0, 0.3),
+    inset 0 0 0 4px rgba(0, 0, 0, 0.6); /* Viền trong dày hơn (4px) và đậm hơn (60%) */
+  border-radius: 6px;
+  display: inline-block;
+  max-width: 60vw;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.polaroid-frame:hover {
+  transform: scale(1.02);
+  box-shadow: 
+    0 25px 35px rgba(0, 0, 0, 0.4),
+    inset 0 0 0 4px rgba(0, 0, 0, 0.8);
+}
+.polaroid-frame img {
+  border: 3px solid rgba(0, 0, 0, 0.3); /* Viền đen nhẹ bao quanh ảnh */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Đổ bóng nhẹ cho ảnh nổi lên */
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: border-color 0.3s ease;
+}
+
+.polaroid-frame:hover img {
+  border-color: rgba(0, 0, 0, 0.5); /* Viền đậm hơn khi hover */
+}
+/* Điều chỉnh vị trí tương đối cho khung nếu chưa có */
+.polaroid-frame {
+  position: relative;
+}
+
+/* Trái tim to, tràn viền và nghiêng */
+.polaroid-frame::after {
+  content: "❤️";
+  position: absolute;
+  bottom: -10px;       /* Tràn ra ngoài phía dưới */
+  left: -10px;         /* Tràn ra ngoài phía trái */
+  font-size: 40px;     /* Kích thước lớn */
+  color: #ff4d6d;      /* Màu hồng đỏ tươi */
+  transform: rotate(-12deg); /* Nghiêng trái một chút */
+  filter: drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.25));
+  pointer-events: none; /* Không ảnh hưởng click */
+  z-index: 10;          /* Nằm trên cùng */
+  text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.5); /* Viền sáng nhẹ */
+  line-height: 1;
+}
+/* Nơ hồng ở góc trên bên phải */
+.polaroid-frame::before {
+  content: "🎀";
+  position: absolute;
+  top: -10px;        /* Tràn ra ngoài phía trên */
+  right: -10px;      /* Tràn ra ngoài phía phải */
+  font-size: 40px;   /* Kích thước to bằng trái tim */
+  color: #ff99cc;    /* Màu hồng nhạt */
+  transform: rotate(12deg); /* Nghiêng nhẹ về bên phải */
+  filter: drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.25));
+  pointer-events: none;
+  z-index: 10;
+  text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.5);
+  line-height: 1;
+}
 
     #lightbox-img {
       max-height: 70vh;
@@ -161,17 +219,53 @@
     }
 
     #lightbox-note {
-      background: #fff9e6;
-      color: #333;
-      padding: 40px 35px 35px;
-      width: 450px;
-      border-radius: 4px;
-      box-shadow: 3px 6px 20px rgba(0,0,0,0.5);
-      font-size: 1.4rem;
-      line-height: 1.7;
-      position: relative;
-      transform: rotate(2deg);
-    }
+  background-color: #f9efd8; /* Màu giấy cũ */
+  background-image: 
+    repeating-linear-gradient(45deg, rgba(0,0,0,0.02) 0px, rgba(0,0,0,0.02) 2px, transparent 2px, transparent 8px),
+    repeating-linear-gradient(135deg, rgba(0,0,0,0.02) 0px, rgba(0,0,0,0.02) 2px, transparent 2px, transparent 8px);
+  /* Hai lớp chéo tạo hiệu ứng vân giấy nhẹ */
+  color: #333;
+  padding: 40px 35px 35px;
+  width: 450px;
+  border-radius: 8px; /* Bo tròn nhẹ hơn một chút */
+  box-shadow: 3px 6px 20px rgba(0,0,0,0.5);
+  font-size: 1.4rem;
+  line-height: 1.7;
+  position: relative;
+  transform: rotate(2deg);
+  border: 1px solid rgba(0,0,0,0.1); /* Viền mờ bên ngoài */
+  outline: 1px solid rgba(255,245,200,0.4); /* Ánh sáng giả */
+  outline-offset: 2px;
+}
+
+/* Dây thừng trang trí vòng quanh (lớp chính) */
+#lightbox-note::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
+  border: 2px solid #b38b5a; /* Màu nâu dây thừng */
+  border-radius: 10px; /* Bo tròn theo note */
+  opacity: 0.5;
+  pointer-events: none;
+  box-shadow: 0 0 4px rgba(0,0,0,0.1);
+}
+
+/* Lớp phụ tạo hiệu ứng dây thừng đan chéo nhẹ */
+#lightbox-note::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border: 1px dashed #a0714b;
+  border-radius: 12px;
+  opacity: 0.3;
+  pointer-events: none;
+}
 
     #lightbox-note::before {
       content: '';
@@ -220,6 +314,86 @@
       z-index: 0;
       opacity: 0.5; /* Điều chỉnh độ mờ theo ý muốn */
     }
+    /* Hộp quà */
+.gift-container {
+  text-align: center;
+  margin: 40px auto 20px;
+  padding: 20px;
+  max-width: 400px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 30px;
+  backdrop-filter: blur(5px);
+  border: 2px solid rgba(255, 215, 0, 0.5);
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+}
+
+.gift-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.gift-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  font-size: 5rem;
+  line-height: 1;
+  margin-bottom: 15px;
+  transition: transform 0.3s ease;
+}
+
+.gift-emoji.large {
+  font-size: 6rem; /* Làm to hơn một chút */
+}
+
+.gift-link:hover .gift-box {
+  transform: scale(1.1);
+}
+
+.gift-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.25);
+  padding: 12px 20px;
+  border-radius: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+}
+
+.gift-message .arrow {
+  font-size: 2rem;
+  animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(5px); }
+}
+
+/* Responsive cho mobile */
+@media (max-width: 768px) {
+  .gift-box {
+    font-size: 4rem;
+  }
+  .gift-emoji.large {
+    font-size: 5rem;
+  }
+  .gift-message {
+    font-size: 1.2rem;
+    padding: 10px 15px;
+  }
+  .gift-message .arrow {
+    font-size: 1.6rem;
+  }
+}
   </style>
 </head>
 <body>
@@ -258,6 +432,19 @@
       <p style="text-align:center; color:#ffe4e1; opacity:0.8; font-style:italic; margin-top:15px;">Chúc mừng lên rank vàng</p>
     </div>
     <div class="stage" id="main-stage"></div>
+    <!-- Hộp quà và lời nhắn -->
+<div class="gift-container">
+  <a href="https://knowae1.github.io/HistoryInvaders/" target="_blank" class="gift-link">
+    <div class="gift-box">
+      <span class="gift-emoji">🎁</span>
+      <span class="gift-emoji large">🎀</span>
+    </div>
+    <div class="gift-message">
+      <span class="arrow">👉</span>
+      <span class="text">Bấm vào đây để nhận quà!</span>
+    </div>
+  </a>
+</div>
   </div>
 
   <!-- Lightbox zoom ảnh + note -->
