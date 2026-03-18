@@ -1,19 +1,501 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Photo Ring 360 - Trung tâm</title>
-<link rel="stylesheet" href="20-3.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>8/3 Celebration - Rose, Fireworks & Balloons</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { 
+      margin: 0; padding: 0; 
+      background: #050818; 
+      color: #edf2ff; font-family:'Segoe UI', Tahoma, sans-serif; overflow-x: hidden;
+    }
+
+    /* CANVAS PHÁO HOA */
+    #fg-canvas {
+      position: fixed; top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      pointer-events: none; z-index: 9999;
+    }
+
+    /* BÓNG BAY HÌNH TRÁI TIM */
+    #balloons-container {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5000;
+      overflow: hidden;
+    }
+
+    .balloon {
+      position: absolute;
+      bottom: 0;
+      font-size: 2.5rem;
+      user-select: none;
+      opacity: 0.9;
+      filter: drop-shadow(0 0 10px rgba(255, 105, 180, 0.6));
+      animation: floatUp linear forwards;
+      transform: translateY(0);
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.9;
+      }
+      100% {
+        transform: translateY(-120vh) rotate(10deg);
+        opacity: 0;
+      }
+    }
+
+    #content-wrapper {
+      opacity: 0;
+      transition: opacity 2s ease, filter 1.2s ease;
+      padding-bottom: 40px;
+      position: relative;
+      z-index: 1;
+    }
+    #content-wrapper.show { opacity: 1; }
+    .dim-bg { filter: blur(2px) brightness(0.4); }
+
+    /* HOA HỒNG */
+    #rose-intro {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, 100%) scale(0); 
+      z-index: 10000;
+      transition: all 1.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      text-align: center;
+      pointer-events: none;
+    }
+
+    #rose-intro.bloom {
+      transform: translate(-50%, -50%) scale(1.2);
+    }
+
+    #rose-intro.fade-out {
+      transform: translate(-50%, -20%) scale(0);
+      opacity: 0;
+    }
+
+    .rose-svg {
+      width: 220px; height: 220px;
+      filter: drop-shadow(0 0 30px rgba(255, 20, 147, 0.6));
+    }
+
+    .greeting-text {
+      margin-top: 20px; font-size: 1.6rem; font-weight: bold;
+      color: #ffb6c1; text-shadow: 0 0 15px rgba(255,182,193,0.6);
+    }
+
+    /* Giao diện chính */
+    .header-container { text-align: center; padding: 50px 20px; background: rgba(255, 255, 255, 0.02); border-bottom: 1px solid rgba(255, 182, 193, 0.1); margin-bottom: 40px; }
+    .main-title { margin: 0; font-size: 2.5rem; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 15px; text-transform: uppercase; }
+    .text-gradient { background: linear-gradient(90deg, #ffb6c1, #ffffff, #ffc0cb, #ffffff, #ffb6c1); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: gradient_soft 5s linear infinite; -webkit-text-stroke: 1.5px #fff9e5; text-shadow: 0 0 15px rgba(255, 182, 193, 0.3); }
+    .flower-icon { -webkit-text-fill-color: initial; -webkit-text-stroke: 0px; font-size: 2.8rem; }
+    @keyframes gradient_soft { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    .stage { display:flex; flex-direction:column; gap:24px; max-width: calc(100vw - 40px); margin:auto; }
+    .lane { position: relative; overflow:hidden; height:180px; border-radius:14px; border:1px solid rgba(185,205,255,.15); background: rgba(2,12,32,.36); }
+    .track { display:flex; align-items:center; gap:18px; height:100%; animation: scroll-right 22s linear infinite; }
+    .item { width: 210px; min-width: 210px; border-radius: 11px; overflow: hidden; box-shadow: 0 9px 15px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.17); }
+    .item img { width: 100%; height: 130px; object-fit: cover; display: block; cursor: pointer; transition: transform 0.3s ease, filter 0.3s ease; }
+    .item img:hover { transform: scale(1.08); filter: brightness(1.2); }
+    .caption { padding: 8px 6px; text-align:center; font-size:12px; background: rgba(0,0,0,.4); }
+    @keyframes scroll-right { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+
+    /* LIGHTBOX */
+    #lightbox-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    #lightbox-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #lightbox-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 30px;
+      transform: scale(0.4);
+      opacity: 0;
+      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease;
+      max-width: 90vw;
+    }
+
+    #lightbox-overlay.active #lightbox-content {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    /* Khung Polaroid cho ảnh */
+    .polaroid-frame {
+      background: white;
+      padding: 12px 12px 35px 12px; /* Phần dưới rộng hơn để giống ảnh Polaroid */
+      box-shadow: 0 20px 30px rgba(0, 0, 0, 0.5);
+      border-radius: 4px;
+      display: inline-block;
+      max-width: 60vw;
+    }
+
+    #lightbox-img {
+      max-height: 70vh;
+      max-width: 100%;
+      border-radius: 2px;
+      display: block;
+      object-fit: contain;
+    }
+
+    /* Tờ note to hơn */
+    #lightbox-note {
+      background: #fff9e6;
+      color: #333;
+      padding: 40px 35px 35px;
+      width: 450px; /* To hơn trước */
+      border-radius: 4px;
+      box-shadow: 3px 6px 20px rgba(0,0,0,0.5);
+      font-size: 1.4rem; /* Chữ to hơn */
+      line-height: 1.7;
+      position: relative;
+      transform: rotate(2deg);
+    }
+
+    #lightbox-note::before {
+      content: '';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-2deg);
+      width: 100px;
+      height: 28px;
+      background: rgba(255, 255, 255, 0.5);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    #lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 2.5rem;
+      color: white;
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.3s;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+
+    #lightbox-close:hover {
+      transform: scale(1.2) rotate(90deg);
+      color: #ffb6c1;
+    }
+
+    @media (max-width: 768px) {
+      #lightbox-content {
+        flex-direction: column;
+        gap: 20px;
+      }
+      .polaroid-frame {
+        max-width: 90vw;
+        padding: 8px 8px 25px 8px;
+      }
+      #lightbox-img {
+        max-height: 50vh;
+      }
+      #lightbox-note {
+        width: 90vw;
+        max-width: 450px;
+        transform: rotate(0deg);
+        font-size: 1.2rem;
+        padding: 30px 20px 25px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <div class="viewport">
-    <div class="ring" id="ring"></div>
-    <div class="preview">
-      <span class="hint">Chọn 1 ảnh để xem lớn</span>
-      <img id="zoomed" src="5-anh-chot-5-1606141341409419474438.jpg" alt="zoomed" />
+
+  <div id="rose-intro">
+    <svg class="rose-svg" viewBox="0 0 100 100">
+        <path d="M50 95 Q50 70 50 50" stroke="#2d5a27" stroke-width="3" fill="none" />
+        <path d="M50 80 Q30 75 25 60" fill="#3e7a32" />
+        <path d="M50 80 Q70 75 75 60" fill="#3e7a32" />
+        <circle cx="50" cy="45" r="20" fill="#ff0055" />
+        <ellipse cx="40" cy="40" rx="15" ry="18" fill="#ff3377" transform="rotate(-20 40 40)" />
+        <ellipse cx="60" cy="40" rx="15" ry="18" fill="#ff3377" transform="rotate(20 60 40)" />
+        <circle cx="50" cy="35" r="12" fill="#ff6699" />
+        <path d="M42 32 Q50 20 58 32" fill="#ff99bb" />
+    </svg>
+    <div class="greeting-text">Chúc mừng ngày Quốc tế Phụ nữ!</div>
+  </div>
+
+  <div id="balloons-container"></div>
+
+  <canvas id="fg-canvas"></canvas>
+
+  <div id="content-wrapper">
+    <div class="header-container">
+      <h1 class="main-title">
+        <span class="flower-icon">💐</span>
+        <span class="text-gradient">Chúc mừng ngày quốc tế phụ nữ 8/3</span>
+        <span class="flower-icon">💐</span>
+      </h1>
+      <p style="text-align:center; color:#ffe4e1; opacity:0.8; font-style:italic; margin-top:15px;">Happy International Women's Day</p>
+    </div>
+    <div class="stage" id="main-stage"></div>
+  </div>
+
+  <div id="lightbox-overlay">
+    <button id="lightbox-close">✖</button>
+    <div id="lightbox-content">
+      <!-- Khung Polaroid bao quanh ảnh -->
+      <div class="polaroid-frame">
+        <img id="lightbox-img" src="" alt="Zoomed Memory" />
+      </div>
+      <div id="lightbox-note">
+        <!-- Nội dung sẽ được thay bằng JavaScript -->
+      </div>
     </div>
   </div>
-<script src="20-3.js"></script>
+
+  <script>
+    (function() {
+      // Danh sách ảnh gốc (23 ảnh)
+      const imageUrls = [
+        '83/1120.png', '83/1234 - Copy (2).png', '83/1234 - Copy.png', '83/1234.png',
+        '83/12345 - Copy (2).png', '83/12345 - Copy.png', '83/12345.png', '83/a - Copy (2).png',
+        '83/a - Copy.png', '83/a.png', '83/final - Copy (2).png', '83/a (2).png',
+        '83/final - Copy.png', '83/final.png', '83/khang12 - Copy (2).png', '83/khang12 - Copy.png',
+        '83/khang12.png', '83/khang123 - Copy (2).png', '83/khang123 - Copy.png', '83/khang123.png',
+        '83/khang1234 - Copy (2).png', '83/khang1234 - Copy.png', '83/1120.png'
+      ];
+
+      // Mảng nội dung riêng cho từng ảnh (23 câu)
+      const messages = [
+        "Bức ảnh đầu tiên – khởi đầu ngọt ngào! 💕",
+        "Nụ cười của cậu làm tan chảy trái tim tớ. 🌸",
+        "Kỷ niệm này thật đẹp, nhớ mãi không quên. 📸",
+        "Cậu tỏa sáng như ánh mặt trời vậy! ☀️",
+        "Ngày hôm ấy thật vui, cảm ơn cậu vì đã ở bên. 🥰",
+        "Gửi cậu – người con gái tuyệt vời nhất. 💖",
+        "Chúc cậu luôn hạnh phúc và xinh đẹp. 🌹",
+        "Một khoảnh khắc đáng nhớ của chúng mình. 💫",
+        "Cậu làm cho thế giới này trở nên tươi đẹp hơn. 🌷",
+        "Nụ cười của cậu là món quà vô giá. 😊",
+        "Hãy luôn rạng rỡ như thế này nhé! ✨",
+        "Cảm ơn cậu vì tất cả những điều tuyệt vời. 🌺",
+        "Cậu xứng đáng với mọi điều tốt đẹp nhất. 💐",
+        "Mãi là những ký ức đẹp trong tim tớ. 💞",
+        "Chúc cậu một ngày 8/3 tràn ngập yêu thương. 🥂",
+        "Cậu là nàng thơ trong cuộc đời tớ. 🎵",
+        "Hãy luôn tự tin và tỏa sáng nhé! 🌟",
+        "Bên cạnh cậu, mọi thứ đều trở nên nhẹ nhàng. 🕊️",
+        "Tớ rất trân trọng tình bạn của chúng ta. 🤗",
+        "Cậu là một nửa tuyệt vời của thế giới. 🌍",
+        "Gửi cậu – bông hoa xinh đẹp nhất vườn. 🌼",
+        "Mong rằng cậu sẽ luôn mỉm cười. 😄",
+        "Hôm nay và mãi mãi, cậu luôn đặc biệt. 💝"
+      ];
+
+      // --- XÂY DỰNG GALLERY ---
+      function buildGallery() {
+        const stage = document.getElementById('main-stage');
+        stage.innerHTML = '';
+
+        const rows = [
+          imageUrls.slice(0, 😎,
+          imageUrls.slice(8, 16),
+          imageUrls.slice(16, 23)
+        ];
+
+        rows.forEach((row, idx) => {
+          const lane = document.createElement('div');
+          lane.className = 'lane';
+          lane.id = lane${idx+1};
+          
+          const track = document.createElement('div');
+          track.className = 'track';
+          track.style.animationDuration = (20 + idx * 3) + 's';
+
+          // Lặp 2 lần để tạo hiệu ứng vô tận
+          for (let repeat = 0; repeat < 2; repeat++) {
+            row.forEach((url, i) => {
+              const item = document.createElement('div');
+              item.className = 'item';
+
+              const img = document.createElement('img');
+              img.src = url;
+              img.alt = Memory ${i+1};
+              img.setAttribute('data-src', url); // Lưu đường dẫn gốc
+              img.onerror = function() { this.src = 'https://via.placeholder.com/210x130
+'; };
+
+              const caption = document.createElement('div');
+              caption.className = 'caption';
+              caption.textContent = Memory ${i+1};
+
+              item.appendChild(img);
+              item.appendChild(caption);
+              track.appendChild(item);
+            });
+          }
+
+          lane.appendChild(track);
+          if(idx === 1) lane.style.marginLeft = '70px';
+          if(idx === 2) lane.style.marginLeft = '35px';
+          stage.appendChild(lane);
+        });
+      }
+
+      buildGallery();
+
+      // --- PHÁO HOA ---
+      const canvas = document.getElementById('fg-canvas');
+      const ctx = canvas.getContext('2d');
+      const wrapper = document.getElementById('content-wrapper');
+      const rose = document.getElementById('rose-intro');
+      let particles = [];
+
+      function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+      window.addEventListener('resize', resize);
+      resize();
+
+      class Particle {
+        constructor(x, y, color, size, speedMult) {
+          this.x = x; this.y = y; this.color = color; this.size = size;
+          this.velocity = { x: (Math.random() - 0.5) * (speedMult * 16), y: (Math.random() - 0.5) * (speedMult * 16) };
+          this.alpha = 1; this.friction = 0.96; this.gravity = 0.08;
+        }
+        draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fillStyle = this.color; ctx.globalAlpha = this.alpha; ctx.fill(); }
+        update() { this.velocity.x *= this.friction; this.velocity.y *= this.friction; this.velocity.y += this.gravity; this.x += this.velocity.x; this.y += this.velocity.y; this.alpha -= 0.012; }
+      }
+
+      function createFirework(x, y, isBig = false) {
+        const colors = ['#ffb6c1', '#ffffff', '#ffd700', '#ff69b4', '#00f2ff', '#a0feff'];
+        const count = isBig ? 180 : 45;
+        for (let i = 0; i < count; i++) {
+          particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)], isBig ? 3.2 : 1.8, isBig ? 1.8 : 1));
+        }
+      }
+
+      function animate() {
+        requestAnimationFrame(animate);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach((p, i) => { if (p.alpha > 0) { p.update(); p.draw(); } else { particles.splice(i, 1); } });
+      }
+      animate();
+
+      // --- BÓNG BAY ---
+      function createBalloons() {
+        const container = document.getElementById('balloons-container');
+        const colors = ['#ff6b9d', '#ff99cc', '#ffb3ba', '#ffd1dc', '#ffb6c1', '#fba0e0', '#fd9fc8'];
+        const numberOfBalloons = 35;
+
+        for (let i = 0; i < numberOfBalloons; i++) {
+          const balloon = document.createElement('div');
+          balloon.className = 'balloon';
+          balloon.innerHTML = '❤️';
+          balloon.style.color = colors[Math.floor(Math.random() * colors.length)];
+          const size = 1.8 + Math.random() * 2;
+          balloon.style.fontSize = size + 'rem';
+          balloon.style.left = Math.random() * 100 + '%';
+          const duration = 4 + Math.random() * 4;
+          balloon.style.animationDuration = duration + 's';
+          balloon.style.animationDelay = (Math.random() * 2) + 's';
+          container.appendChild(balloon);
+
+          setTimeout(() => {
+            if (balloon.parentNode) balloon.remove();
+          }, (duration + parseFloat(balloon.style.animationDelay)) * 1000);
+        }
+      }
+
+      // --- KỊCH BẢN MỞ ĐẦU ---
+      function startExperience() {
+        setTimeout(() => {
+          rose.classList.add('bloom');
+          wrapper.classList.add('show');
+          wrapper.classList.add('dim-bg');
+          createBalloons();
+
+          for(let i=0; i<15; i++) {
+            setTimeout(() => {
+              createFirework(Math.random() * canvas.width, Math.random() * canvas.height * 0.8, true);
+            }, i * 350);
+          }
+        }, 500);
+
+        setTimeout(() => {
+          rose.classList.add('fade-out');
+          wrapper.classList.remove('dim-bg');
+        }, 7000);
+      }
+
+      startExperience();
+
+      // Click chuột để tạo pháo hoa nhỏ
+      window.addEventListener('mousedown', (e) => {
+        createFirework(e.clientX, e.clientY, false);
+      });
+
+      // --- LIGHTBOX VỚI NỘI DUNG RIÊNG & KHUNG POLAROID ---
+      const lightboxOverlay = document.getElementById('lightbox-overlay');
+      const lightboxImg = document.getElementById('lightbox-img');
+      const lightboxNote = document.getElementById('lightbox-note');
+      const closeBtn = document.getElementById('lightbox-close');
+
+      document.getElementById('main-stage').addEventListener('click', function(e) {
+        const img = e.target.closest('img');
+        if (!img) return;
+
+        const src = img.getAttribute('data-src') || img.src;
+        const index = imageUrls.findIndex(url => src.includes(url));
+        
+        if (index !== -1) {
+          lightboxImg.src = img.src;
+          lightboxNote.innerHTML = <p><strong>Gửi chị em 12 sử,</strong><br><br>${messages[index]}</p>;
+          lightboxOverlay.classList.add('active');
+        } else {
+          lightboxImg.src = img.src;
+          lightboxNote.innerHTML = <p><strong>Gửi chị em 12 sử,</strong><br><br>Chúc chị em một ngày 8/3 thật rực rỡ! 💖💐</p>;
+          lightboxOverlay.classList.add('active');
+        }
+        
+        e.stopPropagation();
+      });
+
+      function closeLightbox() {
+        lightboxOverlay.classList.remove('active');
+      }
+
+      closeBtn.addEventListener('click', closeLightbox);
+      lightboxOverlay.addEventListener('click', function(e) {
+        if (e.target === lightboxOverlay) {
+          closeLightbox();
+        }
+      });
+
+      window.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeLightbox();
+      });
+
+    })();
+  </script>
 </body>
 </html>
