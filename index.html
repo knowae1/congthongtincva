@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>suck my dih</title>
+  <title>8/3 Celebration - Rose, Fireworks & Balloons</title>
   <style>
     * { box-sizing: border-box; }
     body { 
@@ -43,14 +43,8 @@
     }
 
     @keyframes floatUp {
-      0% {
-        transform: translateY(0) rotate(0deg);
-        opacity: 0.9;
-      }
-      100% {
-        transform: translateY(-120vh) rotate(10deg);
-        opacity: 0;
-      }
+      0% { transform: translateY(0) rotate(0deg); opacity: 0.9; }
+      100% { transform: translateY(-120vh) rotate(10deg); opacity: 0; }
     }
 
     #content-wrapper {
@@ -74,14 +68,8 @@
       pointer-events: none;
     }
 
-    #rose-intro.bloom {
-      transform: translate(-50%, -50%) scale(1.2);
-    }
-
-    #rose-intro.fade-out {
-      transform: translate(-50%, -20%) scale(0);
-      opacity: 0;
-    }
+    #rose-intro.bloom { transform: translate(-50%, -50%) scale(1.2); }
+    #rose-intro.fade-out { transform: translate(-50%, -20%) scale(0); opacity: 0; }
 
     .rose-svg {
       width: 220px; height: 220px;
@@ -99,14 +87,32 @@
     .text-gradient { background: linear-gradient(90deg, #ffb6c1, #ffffff, #ffc0cb, #ffffff, #ffb6c1); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: gradient_soft 5s linear infinite; -webkit-text-stroke: 1.5px #fff9e5; text-shadow: 0 0 15px rgba(255, 182, 193, 0.3); }
     .flower-icon { -webkit-text-fill-color: initial; -webkit-text-stroke: 0px; font-size: 2.8rem; }
     @keyframes gradient_soft { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
     .stage { display:flex; flex-direction:column; gap:24px; max-width: calc(100vw - 40px); margin:auto; }
     .lane { position: relative; overflow:hidden; height:180px; border-radius:14px; border:1px solid rgba(185,205,255,.15); background: rgba(2,12,32,.36); }
-    .track { display:flex; align-items:center; gap:18px; height:100%; animation: scroll-right 22s linear infinite; }
+
+    /* Track - dùng biến CSS để dịch chuyển chính xác */
+    .track {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      height: 100%;
+      width: fit-content; /* tự động co theo nội dung */
+      animation: scroll-right linear infinite;
+      will-change: transform;
+      backface-visibility: hidden;
+      perspective: 1000px;
+    }
+
+    @keyframes scroll-right {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(calc(-1 * var(--scroll-distance))); }
+    }
+
     .item { width: 210px; min-width: 210px; border-radius: 11px; overflow: hidden; box-shadow: 0 9px 15px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.17); }
     .item img { width: 100%; height: 130px; object-fit: cover; display: block; cursor: pointer; transition: transform 0.3s ease, filter 0.3s ease; }
     .item img:hover { transform: scale(1.08); filter: brightness(1.2); }
     .caption { padding: 8px 6px; text-align:center; font-size:12px; background: rgba(0,0,0,.4); }
-    @keyframes scroll-right { from { transform: translateX(-50%); } to { transform: translateX(0); } }
 
     /* LIGHTBOX */
     #lightbox-overlay {
@@ -124,11 +130,7 @@
       transition: opacity 0.4s ease;
     }
 
-    #lightbox-overlay.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
+    #lightbox-overlay.active { opacity: 1; pointer-events: auto; }
     #lightbox-content {
       display: flex;
       align-items: center;
@@ -139,16 +141,11 @@
       transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease;
       max-width: 90vw;
     }
+    #lightbox-overlay.active #lightbox-content { transform: scale(1); opacity: 1; }
 
-    #lightbox-overlay.active #lightbox-content {
-      transform: scale(1);
-      opacity: 1;
-    }
-
-    /* Khung Polaroid cho ảnh */
     .polaroid-frame {
       background: white;
-      padding: 12px 12px 35px 12px; /* Phần dưới rộng hơn để giống ảnh Polaroid */
+      padding: 12px 12px 35px 12px;
       box-shadow: 0 20px 30px rgba(0, 0, 0, 0.5);
       border-radius: 4px;
       display: inline-block;
@@ -163,15 +160,14 @@
       object-fit: contain;
     }
 
-    /* Tờ note to hơn */
     #lightbox-note {
       background: #fff9e6;
       color: #333;
       padding: 40px 35px 35px;
-      width: 450px; /* To hơn trước */
+      width: 450px;
       border-radius: 4px;
       box-shadow: 3px 6px 20px rgba(0,0,0,0.5);
-      font-size: 1.4rem; /* Chữ to hơn */
+      font-size: 1.4rem;
       line-height: 1.7;
       position: relative;
       transform: rotate(2deg);
@@ -201,124 +197,111 @@
       transition: transform 0.3s;
       text-shadow: 0 2px 10px rgba(0,0,0,0.5);
     }
-
-    #lightbox-close:hover {
-      transform: scale(1.2) rotate(90deg);
-      color: #ffb6c1;
-    }
+    #lightbox-close:hover { transform: scale(1.2) rotate(90deg); color: #ffb6c1; }
 
     @media (max-width: 768px) {
-      #lightbox-content {
-        flex-direction: column;
-        gap: 20px;
-      }
-      .polaroid-frame {
-        max-width: 90vw;
-        padding: 8px 8px 25px 8px;
-      }
-      #lightbox-img {
-        max-height: 50vh;
-      }
-      #lightbox-note {
-        width: 90vw;
-        max-width: 450px;
-        transform: rotate(0deg);
-        font-size: 1.2rem;
-        padding: 30px 20px 25px;
-      }
+      #lightbox-content { flex-direction: column; gap: 20px; }
+      .polaroid-frame { max-width: 90vw; padding: 8px 8px 25px 8px; }
+      #lightbox-img { max-height: 50vh; }
+      #lightbox-note { width: 90vw; max-width: 450px; transform: rotate(0deg); font-size: 1.2rem; padding: 30px 20px 25px; }
     }
+
     /* Ảnh nền cố định */
-#background-fixed {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('ảnh nền 2.jpg'); /* Thay bằng đường dẫn ảnh bạn muốn */
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: 0; /* Nằm dưới mọi nội dung */
-  opacity: 0.3; /* Điều chỉnh độ mờ để nội dung dễ đọc (tuỳ chọn) */
-}
+    #background-fixed {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('ảnh nền 3.jpg'); /* THAY ĐƯỜNG DẪN ẢNH NỀN CỦA BẠN */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: 0;
+      opacity: 0.5; /* Điều chỉnh độ mờ theo ý muốn */
+    }
   </style>
 </head>
 <body>
+  <!-- Ảnh nền cố định -->
   <div id="background-fixed"></div>
 
+  <!-- Hoa hồng hiệu ứng đầu -->
   <div id="rose-intro">
     <svg class="rose-svg" viewBox="0 0 100 100">
-        <path d="M50 95 Q50 70 50 50" stroke="#2d5a27" stroke-width="3" fill="none" />
-        <path d="M50 80 Q30 75 25 60" fill="#3e7a32" />
-        <path d="M50 80 Q70 75 75 60" fill="#3e7a32" />
-        <circle cx="50" cy="45" r="20" fill="#ff0055" />
-        <ellipse cx="40" cy="40" rx="15" ry="18" fill="#ff3377" transform="rotate(-20 40 40)" />
-        <ellipse cx="60" cy="40" rx="15" ry="18" fill="#ff3377" transform="rotate(20 60 40)" />
-        <circle cx="50" cy="35" r="12" fill="#ff6699" />
-        <path d="M42 32 Q50 20 58 32" fill="#ff99bb" />
+      <path d="M50 95 Q50 70 50 50" stroke="#2d5a27" stroke-width="3" fill="none" />
+      <path d="M50 80 Q30 75 25 60" fill="#3e7a32" />
+      <path d="M50 80 Q70 75 75 60" fill="#3e7a32" />
+      <circle cx="50" cy="45" r="20" fill="#ff0055" />
+      <ellipse cx="40" cy="40" rx="15" ry="18" fill="#ff3377" transform="rotate(-20 40 40)" />
+      <ellipse cx="60" cy="40" rx="15" ry="18" fill="#ff3377" transform="rotate(20 60 40)" />
+      <circle cx="50" cy="35" r="12" fill="#ff6699" />
+      <path d="M42 32 Q50 20 58 32" fill="#ff99bb" />
     </svg>
-    <div class="greeting-text">emerald before graduation</div>
+    <div class="greeting-text">Chúc mừng lên rank vàng</div>
   </div>
 
+  <!-- Container bóng bay -->
   <div id="balloons-container"></div>
 
+  <!-- Canvas pháo hoa -->
   <canvas id="fg-canvas"></canvas>
 
+  <!-- Nội dung chính: ảnh cuộn -->
   <div id="content-wrapper">
     <div class="header-container">
       <h1 class="main-title">
         <span class="flower-icon">💐</span>
-        <span class="text-gradient">emerald before graduation with pantheon</span>
+        <span class="text-gradient">Chúc mừng lên rank vàng</span>
         <span class="flower-icon">💐</span>
       </h1>
-      <p style="text-align:center; color:#ffe4e1; opacity:0.8; font-style:italic; margin-top:15px;">patheon WQE</p>
+      <p style="text-align:center; color:#ffe4e1; opacity:0.8; font-style:italic; margin-top:15px;">Chúc mừng lên rank vàng</p>
     </div>
     <div class="stage" id="main-stage"></div>
   </div>
 
+  <!-- Lightbox zoom ảnh + note -->
   <div id="lightbox-overlay">
     <button id="lightbox-close">✖</button>
     <div id="lightbox-content">
-      <!-- Khung Polaroid bao quanh ảnh -->
       <div class="polaroid-frame">
         <img id="lightbox-img" src="" alt="Zoomed Memory" />
       </div>
-      <div id="lightbox-note">
-        <!-- Nội dung sẽ được thay bằng JavaScript -->
-      </div>
+      <div id="lightbox-note"></div>
     </div>
   </div>
 
   <script>
     (function() {
-      // Danh sách ảnh gốc (23 ảnh)
+      // ========== DANH SÁCH ẢNH (23 ẢNH) ==========
+      // THAY ĐƯỜNG DẪN CHO ĐÚNG VỚI THƯ MỤC ẢNH CỦA BẠN
       const imageUrls = [
-        '1 (1).png',
-        '1 (2).png',
-        '1 (10).png',
-        '1 (11).png',
-        '1 (12).png',
-        '1 (13).png',
-        '1 (14).png',
-        '1 (15).png',
-        '1 (16).png',
-        '1 (17).png',
-        '1 (18).png',
-        '1 (19).png',
-        '1 (20).png',
-        '1 (3).png',
-        '1 (4).png',
-        '1 (5).png',
-        '1 (6).png',
-        '1 (7).png',
-        '1 (8).png',
-        '1 (9).png',
-        '1.png',
-        '2.png',
-        '1.png'
+        'ảnh/1 (1).png',
+        'ảnh/1 (2).png',
+        'ảnh/1 (10).png',
+        'ảnh/1 (11).png',
+        'ảnh/1 (12).png',
+        'ảnh/1 (13).png',
+        'ảnh/1 (14).png',
+        'ảnh/1 (15).png',
+        'ảnh/1 (16).png',
+        'ảnh/1 (17).png',
+        'ảnh/1 (18).png',
+        'ảnh/1 (19).png',
+        'ảnh/1 (20).png',
+        'ảnh/1 (3).png',
+        'ảnh/1 (4).png',
+        'ảnh/1 (5).png',
+        'ảnh/1 (6).png',
+        'ảnh/1 (7).png',
+        'ảnh/1 (8).png',
+        'ảnh/1 (9).png',
+        'ảnh/1.png',
+        'ảnh/2.png',
+        'ảnh/1.png' // ảnh cuối trùng lặp, bạn có thể sửa lại nếu cần
       ];
 
-      // Mảng nội dung riêng cho từng ảnh (23 câu)
+      // ========== NỘI DUNG RIÊNG CHO TỪNG ẢNH ==========
       const messages = [
         "Bức ảnh đầu tiên – khởi đầu ngọt ngào! 💕",
         "Nụ cười của cậu làm tan chảy trái tim tớ. 🌸",
@@ -345,25 +328,38 @@
         "Hôm nay và mãi mãi, cậu luôn đặc biệt. 💝"
       ];
 
-      // --- XÂY DỰNG GALLERY ---
+      // ========== XÂY DỰNG GALLERY (ĐÃ SỬA LỖI LOOP) ==========
       function buildGallery() {
         const stage = document.getElementById('main-stage');
         stage.innerHTML = '';
 
+        // Chia ảnh thành 3 hàng (lane)
         const rows = [
           imageUrls.slice(0, 8),
           imageUrls.slice(8, 16),
           imageUrls.slice(16, 23)
         ];
 
+        const itemWidth = 210;      // chiều rộng mỗi ảnh
+        const gap = 18;             // khoảng cách giữa các ảnh
+        const speed = 80;           // tốc độ mong muốn (px/giây) – tăng để nhanh hơn
+
         rows.forEach((row, idx) => {
           const lane = document.createElement('div');
           lane.className = 'lane';
           lane.id = `lane${idx+1}`;
-          
+
           const track = document.createElement('div');
           track.className = 'track';
-          track.style.animationDuration = (20 + idx * 3) + 's';
+
+          // Tính tổng chiều rộng của một bộ ảnh (một lần)
+          const n = row.length;
+          const totalWidth = n * itemWidth + (n - 1) * gap;
+          const duration = totalWidth / speed; // thời gian cho một vòng
+
+          // Gán biến CSS – khoảng cách dịch chuyển (px)
+          track.style.setProperty('--scroll-distance', totalWidth + 'px');
+          track.style.animationDuration = duration + 's';
 
           // Lặp 2 lần để tạo hiệu ứng vô tận
           for (let repeat = 0; repeat < 2; repeat++) {
@@ -374,7 +370,7 @@
               const img = document.createElement('img');
               img.src = url;
               img.alt = `Memory ${i+1}`;
-              img.setAttribute('data-src', url); // Lưu đường dẫn gốc
+              img.setAttribute('data-src', url); // lưu đường dẫn gốc
               img.onerror = function() { this.src = 'https://via.placeholder.com/210x130'; };
 
               const caption = document.createElement('div');
@@ -388,15 +384,18 @@
           }
 
           lane.appendChild(track);
-          if(idx === 1) lane.style.marginLeft = '70px';
-          if(idx === 2) lane.style.marginLeft = '35px';
+
+          // Dịch chuyển lane thứ 2 và 3 sang phải một chút cho đẹp
+          if (idx === 1) lane.style.marginLeft = '70px';
+          if (idx === 2) lane.style.marginLeft = '35px';
+
           stage.appendChild(lane);
         });
       }
 
       buildGallery();
 
-      // --- PHÁO HOA ---
+      // ========== PHÁO HOA ==========
       const canvas = document.getElementById('fg-canvas');
       const ctx = canvas.getContext('2d');
       const wrapper = document.getElementById('content-wrapper');
@@ -432,7 +431,7 @@
       }
       animate();
 
-      // --- BÓNG BAY ---
+      // ========== BÓNG BAY ==========
       function createBalloons() {
         const container = document.getElementById('balloons-container');
         const colors = ['#ff6b9d', '#ff99cc', '#ffb3ba', '#ffd1dc', '#ffb6c1', '#fba0e0', '#fd9fc8'];
@@ -457,7 +456,7 @@
         }
       }
 
-      // --- KỊCH BẢN MỞ ĐẦU ---
+      // ========== KỊCH BẢN MỞ ĐẦU ==========
       function startExperience() {
         setTimeout(() => {
           rose.classList.add('bloom');
@@ -480,12 +479,12 @@
 
       startExperience();
 
-      // Click chuột để tạo pháo hoa nhỏ
+      // Click chuột tạo pháo hoa nhỏ
       window.addEventListener('mousedown', (e) => {
         createFirework(e.clientX, e.clientY, false);
       });
 
-      // --- LIGHTBOX VỚI NỘI DUNG RIÊNG & KHUNG POLAROID ---
+      // ========== LIGHTBOX ==========
       const lightboxOverlay = document.getElementById('lightbox-overlay');
       const lightboxImg = document.getElementById('lightbox-img');
       const lightboxNote = document.getElementById('lightbox-note');
@@ -517,9 +516,7 @@
 
       closeBtn.addEventListener('click', closeLightbox);
       lightboxOverlay.addEventListener('click', function(e) {
-        if (e.target === lightboxOverlay) {
-          closeLightbox();
-        }
+        if (e.target === lightboxOverlay) closeLightbox();
       });
 
       window.addEventListener('keydown', function(e) {
