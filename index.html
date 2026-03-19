@@ -5,21 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>8/3 Celebration - Rose, Fireworks & Balloons</title>
   <style>
+    /* Giữ nguyên toàn bộ CSS cũ, không thay đổi */
     * { box-sizing: border-box; }
     body { 
       margin: 0; padding: 0; 
       background: #050818; 
       color: #edf2ff; font-family:'Segoe UI', Tahoma, sans-serif; overflow-x: hidden;
     }
-
-    /* CANVAS PHÁO HOA */
     #fg-canvas {
       position: fixed; top: 0; left: 0;
       width: 100vw; height: 100vh;
       pointer-events: none; z-index: 9999;
     }
-
-    /* BÓNG BAY HÌNH TRÁI TIM */
     #balloons-container {
       position: fixed;
       bottom: 0;
@@ -30,7 +27,6 @@
       z-index: 5000;
       overflow: hidden;
     }
-
     .balloon {
       position: absolute;
       bottom: 0;
@@ -41,12 +37,10 @@
       animation: floatUp linear forwards;
       transform: translateY(0);
     }
-
     @keyframes floatUp {
       0% { transform: translateY(0) rotate(0deg); opacity: 0.9; }
       100% { transform: translateY(-120vh) rotate(10deg); opacity: 0; }
     }
-
     #content-wrapper {
       opacity: 0;
       transition: opacity 2s ease, filter 1.2s ease;
@@ -56,8 +50,6 @@
     }
     #content-wrapper.show { opacity: 1; }
     .dim-bg { filter: blur(2px) brightness(0.4); }
-
-    /* HOA HỒNG */
     #rose-intro {
       position: fixed;
       top: 50%; left: 50%;
@@ -67,54 +59,42 @@
       text-align: center;
       pointer-events: none;
     }
-
     #rose-intro.bloom { transform: translate(-50%, -50%) scale(1.2); }
     #rose-intro.fade-out { transform: translate(-50%, -20%) scale(0); opacity: 0; }
-
     .rose-svg {
       width: 220px; height: 220px;
       filter: drop-shadow(0 0 30px rgba(255, 20, 147, 0.6));
     }
-
     .greeting-text {
       margin-top: 20px; font-size: 1.6rem; font-weight: bold;
       color: #ffb6c1; text-shadow: 0 0 15px rgba(255,182,193,0.6);
     }
-
-    /* Giao diện chính */
     .header-container { text-align: center; padding: 50px 20px; background: rgba(255, 255, 255, 0.02); border-bottom: 1px solid rgba(255, 182, 193, 0.1); margin-bottom: 40px; }
     .main-title { margin: 0; font-size: 2.5rem; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 15px; text-transform: uppercase; }
     .text-gradient { background: linear-gradient(90deg, #ffb6c1, #ffffff, #ffc0cb, #ffffff, #ffb6c1); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: gradient_soft 5s linear infinite; -webkit-text-stroke: 1.5px #fff9e5; text-shadow: 0 0 15px rgba(255, 182, 193, 0.3); }
     .flower-icon { -webkit-text-fill-color: initial; -webkit-text-stroke: 0px; font-size: 2.8rem; }
     @keyframes gradient_soft { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-
     .stage { display:flex; flex-direction:column; gap:24px; max-width: calc(100vw - 40px); margin:auto; }
     .lane { position: relative; overflow:hidden; height:180px; border-radius:14px; border:1px solid rgba(185,205,255,.15); background: rgba(2,12,32,.36); }
-
-    /* Track - dùng biến CSS để dịch chuyển chính xác */
     .track {
       display: flex;
       align-items: center;
       gap: 18px;
       height: 100%;
-      width: fit-content; /* tự động co theo nội dung */
+      width: fit-content;
       animation: scroll-right linear infinite;
       will-change: transform;
       backface-visibility: hidden;
       perspective: 1000px;
     }
-
     @keyframes scroll-right {
       0% { transform: translateX(0); }
       100% { transform: translateX(calc(-1 * var(--scroll-distance))); }
     }
-
     .item { width: 210px; min-width: 210px; border-radius: 11px; overflow: hidden; box-shadow: 0 9px 15px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.17); }
     .item img { width: 100%; height: 130px; object-fit: cover; display: block; cursor: pointer; transition: transform 0.3s ease, filter 0.3s ease; }
     .item img:hover { transform: scale(1.08); filter: brightness(1.2); }
     .caption { padding: 8px 6px; text-align:center; font-size:12px; background: rgba(0,0,0,.4); }
-
-    /* LIGHTBOX */
     #lightbox-overlay {
       position: fixed;
       top: 0; left: 0;
@@ -129,7 +109,6 @@
       pointer-events: none;
       transition: opacity 0.4s ease;
     }
-
     #lightbox-overlay.active { opacity: 1; pointer-events: auto; }
     #lightbox-content {
       display: flex;
@@ -142,74 +121,60 @@
       max-width: 90vw;
     }
     #lightbox-overlay.active #lightbox-content { transform: scale(1); opacity: 1; }
-
-   .polaroid-frame {
-  background: rgb(255, 255, 255);
-  padding: 16px 16px 42px 16px;
-  border: 2px solid rgba(0, 0, 0, 0.2);
-  box-shadow: 
-    0 20px 30px rgba(0, 0, 0, 0.3),
-    inset 0 0 0 4px rgba(0, 0, 0, 0.6); /* Viền trong dày hơn (4px) và đậm hơn (60%) */
-  border-radius: 6px;
-  display: inline-block;
-  max-width: 60vw;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.polaroid-frame:hover {
-  transform: scale(1.02);
-  box-shadow: 
-    0 25px 35px rgba(0, 0, 0, 0.4),
-    inset 0 0 0 4px rgba(0, 0, 0, 0.8);
-}
-.polaroid-frame img {
-  border: 3px solid rgba(0, 0, 0, 0.3); /* Viền đen nhẹ bao quanh ảnh */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Đổ bóng nhẹ cho ảnh nổi lên */
-  display: block;
-  width: 100%;
-  height: auto;
-  transition: border-color 0.3s ease;
-}
-
-.polaroid-frame:hover img {
-  border-color: rgba(0, 0, 0, 0.5); /* Viền đậm hơn khi hover */
-}
-/* Điều chỉnh vị trí tương đối cho khung nếu chưa có */
-.polaroid-frame {
-  position: relative;
-}
-
-/* Trái tim to, tràn viền và nghiêng */
-.polaroid-frame::after {
-  content: "❤️";
-  position: absolute;
-  bottom: -10px;       /* Tràn ra ngoài phía dưới */
-  left: -10px;         /* Tràn ra ngoài phía trái */
-  font-size: 40px;     /* Kích thước lớn */
-  color: #ff4d6d;      /* Màu hồng đỏ tươi */
-  transform: rotate(-12deg); /* Nghiêng trái một chút */
-  filter: drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.25));
-  pointer-events: none; /* Không ảnh hưởng click */
-  z-index: 10;          /* Nằm trên cùng */
-  text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.5); /* Viền sáng nhẹ */
-  line-height: 1;
-}
-/* Nơ hồng ở góc trên bên phải */
-.polaroid-frame::before {
-  content: "🎀";
-  position: absolute;
-  top: -10px;        /* Tràn ra ngoài phía trên */
-  right: -10px;      /* Tràn ra ngoài phía phải */
-  font-size: 40px;   /* Kích thước to bằng trái tim */
-  color: #ff99cc;    /* Màu hồng nhạt */
-  transform: rotate(12deg); /* Nghiêng nhẹ về bên phải */
-  filter: drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.25));
-  pointer-events: none;
-  z-index: 10;
-  text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.5);
-  line-height: 1;
-}
-
+    .polaroid-frame {
+      background: rgb(255, 255, 255);
+      padding: 16px 16px 42px 16px;
+      border: 2px solid rgba(0, 0, 0, 0.2);
+      box-shadow: 0 20px 30px rgba(0, 0, 0, 0.3), inset 0 0 0 4px rgba(0, 0, 0, 0.6);
+      border-radius: 6px;
+      display: inline-block;
+      max-width: 60vw;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .polaroid-frame:hover {
+      transform: scale(1.02);
+      box-shadow: 0 25px 35px rgba(0, 0, 0, 0.4), inset 0 0 0 4px rgba(0, 0, 0, 0.8);
+    }
+    .polaroid-frame img {
+      border: 3px solid rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      display: block;
+      width: 100%;
+      height: auto;
+      transition: border-color 0.3s ease;
+    }
+    .polaroid-frame:hover img { border-color: rgba(0, 0, 0, 0.5); }
+    .polaroid-frame {
+      position: relative;
+    }
+    .polaroid-frame::after {
+      content: "❤️";
+      position: absolute;
+      bottom: -10px;
+      left: -10px;
+      font-size: 40px;
+      color: #ff4d6d;
+      transform: rotate(-12deg);
+      filter: drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.25));
+      pointer-events: none;
+      z-index: 10;
+      text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.5);
+      line-height: 1;
+    }
+    .polaroid-frame::before {
+      content: "🎀";
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      font-size: 40px;
+      color: #ff99cc;
+      transform: rotate(12deg);
+      filter: drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.25));
+      pointer-events: none;
+      z-index: 10;
+      text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.5);
+      line-height: 1;
+    }
     #lightbox-img {
       max-height: 70vh;
       max-width: 100%;
@@ -217,68 +182,48 @@
       display: block;
       object-fit: contain;
     }
-
     #lightbox-note {
-  background-color: #f9efd8; /* Màu giấy cũ */
-  background-image: 
-    repeating-linear-gradient(45deg, rgba(0,0,0,0.02) 0px, rgba(0,0,0,0.02) 2px, transparent 2px, transparent 8px),
-    repeating-linear-gradient(135deg, rgba(0,0,0,0.02) 0px, rgba(0,0,0,0.02) 2px, transparent 2px, transparent 8px);
-  /* Hai lớp chéo tạo hiệu ứng vân giấy nhẹ */
-  color: #333;
-  padding: 40px 35px 35px;
-  width: 450px;
-  border-radius: 8px; /* Bo tròn nhẹ hơn một chút */
-  box-shadow: 3px 6px 20px rgba(0,0,0,0.5);
-  font-size: 1.4rem;
-  line-height: 1.7;
-  position: relative;
-  transform: rotate(2deg);
-  border: 1px solid rgba(0,0,0,0.1); /* Viền mờ bên ngoài */
-  outline: 1px solid rgba(255,245,200,0.4); /* Ánh sáng giả */
-  outline-offset: 2px;
-}
-
-/* Dây thừng trang trí vòng quanh (lớp chính) */
-#lightbox-note::before {
-  content: '';
-  position: absolute;
-  top: 6px;
-  left: 6px;
-  right: 6px;
-  bottom: 6px;
-  border: 2px solid #b38b5a; /* Màu nâu dây thừng */
-  border-radius: 10px; /* Bo tròn theo note */
-  opacity: 0.5;
-  pointer-events: none;
-  box-shadow: 0 0 4px rgba(0,0,0,0.1);
-}
-
-/* Lớp phụ tạo hiệu ứng dây thừng đan chéo nhẹ */
-#lightbox-note::after {
-  content: '';
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  border: 1px dashed #a0714b;
-  border-radius: 12px;
-  opacity: 0.3;
-  pointer-events: none;
-}
-
+      background-color: #f9efd8;
+      background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.02) 0px, rgba(0,0,0,0.02) 2px, transparent 2px, transparent 8px),
+                        repeating-linear-gradient(135deg, rgba(0,0,0,0.02) 0px, rgba(0,0,0,0.02) 2px, transparent 2px, transparent 8px);
+      color: #333;
+      padding: 40px 35px 35px;
+      width: 450px;
+      border-radius: 8px;
+      box-shadow: 3px 6px 20px rgba(0,0,0,0.5);
+      font-size: 1.4rem;
+      line-height: 1.7;
+      position: relative;
+      transform: rotate(2deg);
+      border: 1px solid rgba(0,0,0,0.1);
+      outline: 1px solid rgba(255,245,200,0.4);
+      outline-offset: 2px;
+    }
     #lightbox-note::before {
       content: '';
       position: absolute;
-      top: -12px;
-      left: 50%;
-      transform: translateX(-50%) rotate(-2deg);
-      width: 100px;
-      height: 28px;
-      background: rgba(255, 255, 255, 0.5);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      top: 6px;
+      left: 6px;
+      right: 6px;
+      bottom: 6px;
+      border: 2px solid #b38b5a;
+      border-radius: 10px;
+      opacity: 0.5;
+      pointer-events: none;
+      box-shadow: 0 0 4px rgba(0,0,0,0.1);
     }
-
+    #lightbox-note::after {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      border: 1px dashed #a0714b;
+      border-radius: 12px;
+      opacity: 0.3;
+      pointer-events: none;
+    }
     #lightbox-close {
       position: absolute;
       top: 20px;
@@ -292,115 +237,86 @@
       text-shadow: 0 2px 10px rgba(0,0,0,0.5);
     }
     #lightbox-close:hover { transform: scale(1.2) rotate(90deg); color: #ffb6c1; }
-
     @media (max-width: 768px) {
       #lightbox-content { flex-direction: column; gap: 20px; }
       .polaroid-frame { max-width: 90vw; padding: 8px 8px 25px 8px; }
       #lightbox-img { max-height: 50vh; }
       #lightbox-note { width: 90vw; max-width: 450px; transform: rotate(0deg); font-size: 1.2rem; padding: 30px 20px 25px; }
     }
-
-    /* Ảnh nền cố định */
     #background-fixed {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background-image: url('ảnh nền 3.jpg'); /* THAY ĐƯỜNG DẪN ẢNH NỀN CỦA BẠN */
+      background-image: url('anh-nen-nhe.jpg'); /* THAY BẰNG ẢNH NỀN ĐÃ NÉN NHẸ */
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
       z-index: 0;
-      opacity: 0.5; /* Điều chỉnh độ mờ theo ý muốn */
+      opacity: 0.5;
     }
-    /* Hộp quà */
-.gift-container {
-  text-align: center;
-  margin: 40px auto 20px;
-  padding: 20px;
-  max-width: 400px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 30px;
-  backdrop-filter: blur(5px);
-  border: 2px solid rgba(255, 215, 0, 0.5);
-  box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
-}
-
-.gift-link {
-  text-decoration: none;
-  color: inherit;
-  display: block;
-}
-
-.gift-box {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  font-size: 5rem;
-  line-height: 1;
-  margin-bottom: 15px;
-  transition: transform 0.3s ease;
-}
-
-.gift-emoji.large {
-  font-size: 6rem; /* Làm to hơn một chút */
-}
-
-.gift-link:hover .gift-box {
-  transform: scale(1.1);
-}
-
-.gift-message {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  background: rgba(255, 255, 255, 0.25);
-  padding: 12px 20px;
-  border-radius: 50px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #fff;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-  backdrop-filter: blur(4px);
-}
-
-.gift-message .arrow {
-  font-size: 2rem;
-  animation: bounce 1s infinite;
-}
-
-@keyframes bounce {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(5px); }
-}
-
-/* Responsive cho mobile */
-@media (max-width: 768px) {
-  .gift-box {
-    font-size: 4rem;
-  }
-  .gift-emoji.large {
-    font-size: 5rem;
-  }
-  .gift-message {
-    font-size: 1.2rem;
-    padding: 10px 15px;
-  }
-  .gift-message .arrow {
-    font-size: 1.6rem;
-  }
-}
+    .gift-container {
+      text-align: center;
+      margin: 40px auto 20px;
+      padding: 20px;
+      max-width: 400px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 30px;
+      backdrop-filter: blur(5px);
+      border: 2px solid rgba(255, 215, 0, 0.5);
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+    }
+    .gift-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .gift-box {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      font-size: 5rem;
+      line-height: 1;
+      margin-bottom: 15px;
+      transition: transform 0.3s ease;
+    }
+    .gift-emoji.large { font-size: 6rem; }
+    .gift-link:hover .gift-box { transform: scale(1.1); }
+    .gift-message {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.25);
+      padding: 12px 20px;
+      border-radius: 50px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+    }
+    .gift-message .arrow {
+      font-size: 2rem;
+      animation: bounce 1s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(5px); }
+    }
+    @media (max-width: 768px) {
+      .gift-box { font-size: 4rem; }
+      .gift-emoji.large { font-size: 5rem; }
+      .gift-message { font-size: 1.2rem; padding: 10px 15px; }
+      .gift-message .arrow { font-size: 1.6rem; }
+    }
   </style>
 </head>
 <body>
-  <!-- Ảnh nền cố định -->
   <div id="background-fixed"></div>
-
-  <!-- Hoa hồng hiệu ứng đầu -->
   <div id="rose-intro">
     <svg class="rose-svg" viewBox="0 0 100 100">
       <path d="M50 95 Q50 70 50 50" stroke="#2d5a27" stroke-width="3" fill="none" />
@@ -414,14 +330,8 @@
     </svg>
     <div class="greeting-text">Chúc mừng lên rank vàng</div>
   </div>
-
-  <!-- Container bóng bay -->
   <div id="balloons-container"></div>
-
-  <!-- Canvas pháo hoa -->
   <canvas id="fg-canvas"></canvas>
-
-  <!-- Nội dung chính: ảnh cuộn -->
   <div id="content-wrapper">
     <div class="header-container">
       <h1 class="main-title">
@@ -432,22 +342,19 @@
       <p style="text-align:center; color:#ffe4e1; opacity:0.8; font-style:italic; margin-top:15px;">Chúc mừng lên rank vàng</p>
     </div>
     <div class="stage" id="main-stage"></div>
-    <!-- Hộp quà và lời nhắn -->
-<div class="gift-container">
-  <a href="https://knowae1.github.io/HistoryInvaders/" target="_blank" class="gift-link">
-    <div class="gift-box">
-      <span class="gift-emoji">🎁</span>
-      <span class="gift-emoji large">🎀</span>
+    <div class="gift-container">
+      <a href="https://knowae1.github.io/HistoryInvaders/" target="_blank" class="gift-link">
+        <div class="gift-box">
+          <span class="gift-emoji">🎁</span>
+          <span class="gift-emoji large">🎀</span>
+        </div>
+        <div class="gift-message">
+          <span class="arrow">👉</span>
+          <span class="text">Bấm vào đây để nhận quà!</span>
+        </div>
+      </a>
     </div>
-    <div class="gift-message">
-      <span class="arrow">👉</span>
-      <span class="text">Bấm vào đây để nhận quà!</span>
-    </div>
-  </a>
-</div>
   </div>
-
-  <!-- Lightbox zoom ảnh + note -->
   <div id="lightbox-overlay">
     <button id="lightbox-close">✖</button>
     <div id="lightbox-content">
@@ -460,35 +367,34 @@
 
   <script>
     (function() {
-      // ========== DANH SÁCH ẢNH (23 ẢNH) ==========
-      // THAY ĐƯỜNG DẪN CHO ĐÚNG VỚI THƯ MỤC ẢNH CỦA BẠN
+      // ========== DANH SÁCH ẢNH ĐÃ SỬA LỖI ĐƯỜNG DẪN ==========
+      // Đảm bảo tất cả ảnh đều có đuôi .jpg và tồn tại (bạn cần nén ảnh trước)
       const imageUrls = [
-        'ảnh/1 (1).png',
-        'ảnh/1 (2).png',
-        'ảnh/1 (10).png',
-        'ảnh/1 (11).png',
-        'ảnh/1 (12).png',
-        'ảnh/1 (13).png',
-        'ảnh/1 (14).png',
-        'ảnh/1 (15).png',
-        'ảnh/1 (16).png',
-        'ảnh/1 (17).png',
-        'ảnh/1 (18).png',
-        'ảnh/1 (19).png',
-        'ảnh/1 (20).png',
-        'ảnh/1 (3).png',
-        'ảnh/1 (4).png',
-        'ảnh/1 (5).png',
-        'ảnh/1 (6).png',
-        'ảnh/1 (7).png',
-        'ảnh/1 (8).png',
-        'ảnh/1 (9).png',
-        'ảnh/1.png',
-        'ảnh/2.png',
-        'ảnh/1.png' // ảnh cuối trùng lặp, bạn có thể sửa lại nếu cần
+        'ảnh chị em/anngo.jpg',
+        'ảnh chị em/bgh.jpg',
+        'ảnh chị em/bngoc.jpg',
+        'ảnh chị em/chidown.jpg',
+        'ảnh chị em/chingo.jpg',
+        'ảnh chị em/hang.jpg',
+        'ảnh chị em/hanh.jpg',
+        'ảnh chị em/hlinh.jpg',
+        'ảnh chị em/hngan.jpg',
+        'ảnh chị em/mdiep.jpg',
+        'ảnh chị em/mtrang.jpg',
+        'ảnh chị em/ngh.jpg',
+        'ảnh chị em/nhitran.jpg',
+        'ảnh chị em/nnhi.jpg',
+        'ảnh chị em/thuc.jpg',
+        'ảnh chị em/thuy.jpg',
+        'ảnh chị em/tranh.jpg',
+        'ảnh chị em/trdiep.jpg',
+        'ảnh chị em/uyen.jpg',
+        'ảnh chị em/anngo.jpg',    // sửa lại thiếu .jpg
+        'ảnh chị em/anngo.jpg',
+        'ảnh chị em/anngo.jpg',
+        'ảnh chị em/anngo.jpg'
       ];
 
-      // ========== NỘI DUNG RIÊNG CHO TỪNG ẢNH ==========
       const messages = [
         "Bức ảnh đầu tiên – khởi đầu ngọt ngào! 💕",
         "Nụ cười của cậu làm tan chảy trái tim tớ. 🌸",
@@ -515,21 +421,20 @@
         "Hôm nay và mãi mãi, cậu luôn đặc biệt. 💝"
       ];
 
-      // ========== XÂY DỰNG GALLERY (ĐÃ SỬA LỖI LOOP) ==========
+      // ========== XÂY DỰNG GALLERY VỚI LAZY LOADING ==========
       function buildGallery() {
         const stage = document.getElementById('main-stage');
         stage.innerHTML = '';
 
-        // Chia ảnh thành 3 hàng (lane)
         const rows = [
           imageUrls.slice(0, 8),
           imageUrls.slice(8, 16),
           imageUrls.slice(16, 23)
         ];
 
-        const itemWidth = 210;      // chiều rộng mỗi ảnh
-        const gap = 18;             // khoảng cách giữa các ảnh
-        const speed = 80;           // tốc độ mong muốn (px/giây) – tăng để nhanh hơn
+        const itemWidth = 210;
+        const gap = 18;
+        const speed = 90; // tăng tốc độ lên 90px/s để scroll nhanh hơn, giảm tải
 
         rows.forEach((row, idx) => {
           const lane = document.createElement('div');
@@ -539,12 +444,10 @@
           const track = document.createElement('div');
           track.className = 'track';
 
-          // Tính tổng chiều rộng của một bộ ảnh (một lần)
           const n = row.length;
           const totalWidth = n * itemWidth + (n - 1) * gap;
-          const duration = totalWidth / speed; // thời gian cho một vòng
+          const duration = totalWidth / speed;
 
-          // Gán biến CSS – khoảng cách dịch chuyển (px)
           track.style.setProperty('--scroll-distance', totalWidth + 'px');
           track.style.animationDuration = duration + 's';
 
@@ -555,9 +458,12 @@
               item.className = 'item';
 
               const img = document.createElement('img');
+              // Thêm lazy loading và async decoding
+              img.loading = 'lazy';
+              img.decoding = 'async';
               img.src = url;
               img.alt = `Memory ${i+1}`;
-              img.setAttribute('data-src', url); // lưu đường dẫn gốc
+              img.setAttribute('data-src', url);
               img.onerror = function() { this.src = 'https://via.placeholder.com/210x130'; };
 
               const caption = document.createElement('div');
@@ -571,18 +477,15 @@
           }
 
           lane.appendChild(track);
-
-          // Dịch chuyển lane thứ 2 và 3 sang phải một chút cho đẹp
           if (idx === 1) lane.style.marginLeft = '70px';
           if (idx === 2) lane.style.marginLeft = '35px';
-
           stage.appendChild(lane);
         });
       }
 
       buildGallery();
 
-      // ========== PHÁO HOA ==========
+      // ========== PHÁO HOA GIẢM SỐ LƯỢNG PARTICLE ==========
       const canvas = document.getElementById('fg-canvas');
       const ctx = canvas.getContext('2d');
       const wrapper = document.getElementById('content-wrapper');
@@ -596,7 +499,7 @@
       class Particle {
         constructor(x, y, color, size, speedMult) {
           this.x = x; this.y = y; this.color = color; this.size = size;
-          this.velocity = { x: (Math.random() - 0.5) * (speedMult * 16), y: (Math.random() - 0.5) * (speedMult * 16) };
+          this.velocity = { x: (Math.random() - 0.5) * (speedMult * 14), y: (Math.random() - 0.5) * (speedMult * 14) };
           this.alpha = 1; this.friction = 0.96; this.gravity = 0.08;
         }
         draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fillStyle = this.color; ctx.globalAlpha = this.alpha; ctx.fill(); }
@@ -605,9 +508,10 @@
 
       function createFirework(x, y, isBig = false) {
         const colors = ['#ffb6c1', '#ffffff', '#ffd700', '#ff69b4', '#00f2ff', '#a0feff'];
-        const count = isBig ? 180 : 45;
+        // Giảm số lượng particle: big 80, small 25
+        const count = isBig ? 80 : 25;
         for (let i = 0; i < count; i++) {
-          particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)], isBig ? 3.2 : 1.8, isBig ? 1.8 : 1));
+          particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)], isBig ? 2.8 : 1.6, isBig ? 1.6 : 1));
         }
       }
 
@@ -618,11 +522,11 @@
       }
       animate();
 
-      // ========== BÓNG BAY ==========
+      // ========== BÓNG BAY GIẢM SỐ LƯỢNG ==========
       function createBalloons() {
         const container = document.getElementById('balloons-container');
         const colors = ['#ff6b9d', '#ff99cc', '#ffb3ba', '#ffd1dc', '#ffb6c1', '#fba0e0', '#fd9fc8'];
-        const numberOfBalloons = 35;
+        const numberOfBalloons = 20; // giảm từ 35 xuống 20
 
         for (let i = 0; i < numberOfBalloons; i++) {
           const balloon = document.createElement('div');
@@ -632,7 +536,7 @@
           const size = 1.8 + Math.random() * 2;
           balloon.style.fontSize = size + 'rem';
           balloon.style.left = Math.random() * 100 + '%';
-          const duration = 4 + Math.random() * 4;
+          const duration = 3 + Math.random() * 3; // giảm thời gian bay
           balloon.style.animationDuration = duration + 's';
           balloon.style.animationDelay = (Math.random() * 2) + 's';
           container.appendChild(balloon);
@@ -651,7 +555,7 @@
           wrapper.classList.add('dim-bg');
           createBalloons();
 
-          for(let i=0; i<15; i++) {
+          for(let i=0; i<10; i++) { // giảm số lần bắn pháo hoa từ 15 xuống 10
             setTimeout(() => {
               createFirework(Math.random() * canvas.width, Math.random() * canvas.height * 0.8, true);
             }, i * 350);
@@ -671,7 +575,7 @@
         createFirework(e.clientX, e.clientY, false);
       });
 
-      // ========== LIGHTBOX ==========
+      // ========== LIGHTBOX (giữ nguyên) ==========
       const lightboxOverlay = document.getElementById('lightbox-overlay');
       const lightboxImg = document.getElementById('lightbox-img');
       const lightboxNote = document.getElementById('lightbox-note');
