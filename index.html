@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>8/3 Celebration - Rose, Fireworks & Balloons</title>
   <style>
-    /* Giữ nguyên toàn bộ CSS cũ, không thay đổi */
+    /* ===== CSS giữ nguyên ===== */
     * { box-sizing: border-box; }
     body { 
       margin: 0; padding: 0; 
@@ -92,8 +92,27 @@
       100% { transform: translateX(calc(-1 * var(--scroll-distance))); }
     }
     .item { width: 210px; min-width: 210px; border-radius: 11px; overflow: hidden; box-shadow: 0 9px 15px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.17); }
-    .item img { width: 100%; height: 130px; object-fit: cover; display: block; cursor: pointer; transition: transform 0.3s ease, filter 0.3s ease; }
-    .item img:hover { transform: scale(1.08); filter: brightness(1.2); }
+    .placeholder {
+      width: 100%;
+      height: 130px;
+      background: linear-gradient(145deg, #ffb6c1, #ff99cc);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      border-radius: 11px 11px 0 0;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .placeholder:hover {
+      transform: scale(1.02);
+      background: linear-gradient(145deg, #ff99cc, #ffb6c1);
+    }
+    .placeholder.opened {
+      background: linear-gradient(145deg, #c0c0c0, #a0a0a0);
+    }
     .caption { padding: 8px 6px; text-align:center; font-size:12px; background: rgba(0,0,0,.4); }
     #lightbox-overlay {
       position: fixed;
@@ -249,7 +268,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background-image: url('ảnh nền 3.jpg'); /* THAY BẰNG ẢNH NỀN ĐÃ NÉN NHẸ */
+      background-image: url('ảnh nền 3.jpg');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -367,8 +386,7 @@
 
   <script>
     (function() {
-      // ========== DANH SÁCH ẢNH ĐÃ SỬA LỖI ĐƯỜNG DẪN ==========
-      // Đảm bảo tất cả ảnh đều có đuôi .jpg và tồn tại (bạn cần nén ảnh trước)
+      // ========== DANH SÁCH ẢNH ==========
       const imageUrls = [
         'ảnh chị em/anngo.jpg',
         'ảnh chị em/bgh.jpg',
@@ -389,7 +407,7 @@
         'ảnh chị em/tranh.jpg',
         'ảnh chị em/trdiep.jpg',
         'ảnh chị em/uyen.jpg',
-        'ảnh chị em/anngo.jpg',    // sửa lại thiếu .jpg
+        'ảnh chị em/anngo.jpg',
         'ảnh chị em/anngo.jpg',
         'ảnh chị em/anngo.jpg',
         'ảnh chị em/anngo.jpg'
@@ -421,7 +439,34 @@
         "Hôm nay và mãi mãi, cậu luôn đặc biệt. 💝"
       ];
 
-      // ========== XÂY DỰNG GALLERY VỚI LAZY LOADING ==========
+      // ========== MẢNG CAPTIONS (23 dòng) - BẠN CÓ THỂ SỬA TÙY Ý ==========
+      const captions = [
+        "An Ngo xinh đẹp",
+        "BGH dễ thương",
+        "B Ngọc đáng yêu",
+        "Chi Down duyên dáng",
+        "Chi Ngo ngọt ngào",
+        "Hang rạng rỡ",
+        "Hanh tươi tắn",
+        "H Linh dịu dàng",
+        "H Ngan hiền hòa",
+        "M Diep kiêu sa",
+        "M Trang thanh lịch",
+        "Ngh thông minh",
+        "Nhi Tran đáng yêu",
+        "N Nhi dễ mến",
+        "Thuc năng động",
+        "Thuy nhí nhảnh",
+        "Tranh cá tính",
+        "Tr Diep dịu hiền",
+        "Uyen duyên dáng",
+        "An Ngo (2) ❤️",
+        "An Ngo (3) 💕",
+        "An Ngo (4) 💖",
+        "An Ngo (5) 💝"
+      ];
+
+      // ========== XÂY DỰNG GALLERY VỚI PLACEHOLDER ==========
       function buildGallery() {
         const stage = document.getElementById('main-stage');
         stage.innerHTML = '';
@@ -434,7 +479,9 @@
 
         const itemWidth = 210;
         const gap = 18;
-        const speed = 90; // tăng tốc độ lên 90px/s để scroll nhanh hơn, giảm tải
+        const speed = 90;
+
+        let globalIndex = 0; // chỉ số tổng cho tất cả các item (kể cả lặp)
 
         rows.forEach((row, idx) => {
           const lane = document.createElement('div');
@@ -457,22 +504,23 @@
               const item = document.createElement('div');
               item.className = 'item';
 
-              const img = document.createElement('img');
-              // Thêm lazy loading và async decoding
-              img.loading = 'lazy';
-              img.decoding = 'async';
-              img.src = url;
-              img.alt = `Memory ${i+1}`;
-              img.setAttribute('data-src', url);
-              img.onerror = function() { this.src = 'https://via.placeholder.com/210x130'; };
+              // Placeholder dấu hỏi
+              const placeholder = document.createElement('div');
+              placeholder.className = 'placeholder';
+              placeholder.setAttribute('data-src', url);
+              placeholder.setAttribute('data-index', globalIndex % captions.length); // lưu index theo mảng gốc
+              placeholder.innerHTML = '❓';
 
+              // Caption: lấy từ mảng captions theo globalIndex (quay vòng)
               const caption = document.createElement('div');
               caption.className = 'caption';
-              caption.textContent = `Memory ${i+1}`;
+              caption.textContent = captions[globalIndex % captions.length];
 
-              item.appendChild(img);
+              item.appendChild(placeholder);
               item.appendChild(caption);
               track.appendChild(item);
+
+              globalIndex++;
             });
           }
 
@@ -485,7 +533,7 @@
 
       buildGallery();
 
-      // ========== PHÁO HOA GIẢM SỐ LƯỢNG PARTICLE ==========
+      // ========== PHÁO HOA ==========
       const canvas = document.getElementById('fg-canvas');
       const ctx = canvas.getContext('2d');
       const wrapper = document.getElementById('content-wrapper');
@@ -508,7 +556,6 @@
 
       function createFirework(x, y, isBig = false) {
         const colors = ['#ffb6c1', '#ffffff', '#ffd700', '#ff69b4', '#00f2ff', '#a0feff'];
-        // Giảm số lượng particle: big 80, small 25
         const count = isBig ? 80 : 25;
         for (let i = 0; i < count; i++) {
           particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)], isBig ? 2.8 : 1.6, isBig ? 1.6 : 1));
@@ -522,11 +569,11 @@
       }
       animate();
 
-      // ========== BÓNG BAY GIẢM SỐ LƯỢNG ==========
+      // ========== BÓNG BAY ==========
       function createBalloons() {
         const container = document.getElementById('balloons-container');
         const colors = ['#ff6b9d', '#ff99cc', '#ffb3ba', '#ffd1dc', '#ffb6c1', '#fba0e0', '#fd9fc8'];
-        const numberOfBalloons = 20; // giảm từ 35 xuống 20
+        const numberOfBalloons = 20;
 
         for (let i = 0; i < numberOfBalloons; i++) {
           const balloon = document.createElement('div');
@@ -536,7 +583,7 @@
           const size = 1.8 + Math.random() * 2;
           balloon.style.fontSize = size + 'rem';
           balloon.style.left = Math.random() * 100 + '%';
-          const duration = 3 + Math.random() * 3; // giảm thời gian bay
+          const duration = 3 + Math.random() * 3;
           balloon.style.animationDuration = duration + 's';
           balloon.style.animationDelay = (Math.random() * 2) + 's';
           container.appendChild(balloon);
@@ -555,7 +602,7 @@
           wrapper.classList.add('dim-bg');
           createBalloons();
 
-          for(let i=0; i<10; i++) { // giảm số lần bắn pháo hoa từ 15 xuống 10
+          for(let i=0; i<10; i++) {
             setTimeout(() => {
               createFirework(Math.random() * canvas.width, Math.random() * canvas.height * 0.8, true);
             }, i * 350);
@@ -575,27 +622,34 @@
         createFirework(e.clientX, e.clientY, false);
       });
 
-      // ========== LIGHTBOX (giữ nguyên) ==========
+      // ========== LIGHTBOX + ĐÁNH DẤU ĐÃ MỞ (VẪN CLICK LẠI ĐƯỢC) ==========
       const lightboxOverlay = document.getElementById('lightbox-overlay');
       const lightboxImg = document.getElementById('lightbox-img');
       const lightboxNote = document.getElementById('lightbox-note');
       const closeBtn = document.getElementById('lightbox-close');
 
       document.getElementById('main-stage').addEventListener('click', function(e) {
-        const img = e.target.closest('img');
-        if (!img) return;
+        const placeholder = e.target.closest('.placeholder');
+        if (!placeholder) return;
 
-        const src = img.getAttribute('data-src') || img.src;
-        const index = imageUrls.findIndex(url => src.includes(url));
+        // Lấy thông tin ảnh và index
+        const src = placeholder.getAttribute('data-src');
+        const index = placeholder.getAttribute('data-index');
         
-        if (index !== -1) {
-          lightboxImg.src = img.src;
-          lightboxNote.innerHTML = `<p><strong>Gửi chị em 12 sử,</strong><br><br>${messages[index]}</p>`;
+        if (src) {
+          lightboxImg.src = src;
+          if (index !== null && messages[parseInt(index)]) {
+            lightboxNote.innerHTML = `<p><strong>Gửi chị em 12 sử,</strong><br><br>${messages[parseInt(index)]}</p>`;
+          } else {
+            lightboxNote.innerHTML = `<p><strong>Gửi chị em 12 sử,</strong><br><br>Chúc chị em một ngày 8/3 thật rực rỡ! 💖💐</p>`;
+          }
           lightboxOverlay.classList.add('active');
-        } else {
-          lightboxImg.src = img.src;
-          lightboxNote.innerHTML = `<p><strong>Gửi chị em 12 sử,</strong><br><br>Chúc chị em một ngày 8/3 thật rực rỡ! 💖💐</p>`;
-          lightboxOverlay.classList.add('active');
+
+          // Nếu chưa có class opened, thêm vào và đổi icon thành trái tim
+          if (!placeholder.classList.contains('opened')) {
+            placeholder.innerHTML = '💕';
+            placeholder.classList.add('opened');
+          }
         }
         
         e.stopPropagation();
