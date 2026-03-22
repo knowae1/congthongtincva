@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>8/3 Celebration - Rose, Fireworks & Balloons</title>
   <style>
-    /* ===== CSS giữ nguyên ===== */
     * { box-sizing: border-box; }
     body { 
       margin: 0; padding: 0; 
@@ -69,29 +68,69 @@
       margin-top: 20px; font-size: 1.6rem; font-weight: bold;
       color: #ffb6c1; text-shadow: 0 0 15px rgba(255,182,193,0.6);
     }
-    .header-container { text-align: center; padding: 50px 20px; background: rgba(255, 255, 255, 0.02); border-bottom: 1px solid rgba(255, 182, 193, 0.1); margin-bottom: 40px; }
+    .header-container { text-align: center; padding: 50px 20px; background: rgba(255, 255, 255, 0.02); border-bottom: 1px solid rgba(255, 182, 193, 0.1); margin-bottom: 20px; }
     .main-title { margin: 0; font-size: 2.5rem; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 15px; text-transform: uppercase; }
     .text-gradient { background: linear-gradient(90deg, #ffb6c1, #ffffff, #ffc0cb, #ffffff, #ffb6c1); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: gradient_soft 5s linear infinite; -webkit-text-stroke: 1.5px #fff9e5; text-shadow: 0 0 15px rgba(255, 182, 193, 0.3); }
     .flower-icon { -webkit-text-fill-color: initial; -webkit-text-stroke: 0px; font-size: 2.8rem; }
     @keyframes gradient_soft { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    /* Hiệu ứng nhấp nháy nhẹ cho câu hướng dẫn */
+    @keyframes gentlePulse {
+      0% { opacity: 0.7; text-shadow: 0 0 0px #ffb6c1; }
+      50% { opacity: 1; text-shadow: 0 0 12px #ffb6c1; }
+      100% { opacity: 0.7; text-shadow: 0 0 0px #ffb6c1; }
+    }
+    /* Container cho lời hướng dẫn - căn giữa hoàn hảo */
+    .instruction-box {
+      text-align: center;
+      margin: 0 auto 30px auto;
+      width: fit-content;
+      max-width: 90%;
+      background: rgba(255, 182, 193, 0.15);
+      backdrop-filter: blur(8px);
+      border-radius: 60px;
+      padding: 12px 28px;
+      border: 1px solid rgba(255, 182, 193, 0.4);
+      box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
+    }
+    .instruction-text {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #ffb6c1;
+      animation: gentlePulse 2s infinite;
+      letter-spacing: 1px;
+      display: inline-block;
+      white-space: nowrap;
+    }
     .stage { display:flex; flex-direction:column; gap:24px; max-width: calc(100vw - 40px); margin:auto; }
-    .lane { position: relative; overflow:hidden; height:180px; border-radius:14px; border:1px solid rgba(185,205,255,.15); background: rgba(2,12,32,.36); }
+    .lane {
+      position: relative;
+      overflow: hidden;
+      height: 180px;
+      border-radius: 14px;
+      border: 1px solid rgba(185,205,255,.15);
+      background: rgba(2,12,32,.36);
+      will-change: transform;
+    }
     .track {
       display: flex;
       align-items: center;
       gap: 18px;
       height: 100%;
       width: fit-content;
-      animation: scroll-right linear infinite;
       will-change: transform;
       backface-visibility: hidden;
-      perspective: 1000px;
+      transform: translate3d(0,0,0);
+      position: relative;
     }
-    @keyframes scroll-right {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(calc(-1 * var(--scroll-distance))); }
+    .item {
+      width: 210px;
+      min-width: 210px;
+      border-radius: 11px;
+      overflow: hidden;
+      box-shadow: 0 9px 15px rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.17);
+      flex-shrink: 0;
     }
-    .item { width: 210px; min-width: 210px; border-radius: 11px; overflow: hidden; box-shadow: 0 9px 15px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.17); }
     .placeholder {
       width: 100%;
       height: 130px;
@@ -138,6 +177,7 @@
       opacity: 0;
       transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease;
       max-width: 90vw;
+      position: relative;
     }
     #lightbox-overlay.active #lightbox-content { transform: scale(1); opacity: 1; }
     .polaroid-frame {
@@ -149,6 +189,7 @@
       display: inline-block;
       max-width: 60vw;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
     }
     .polaroid-frame:hover {
       transform: scale(1.02);
@@ -163,9 +204,6 @@
       transition: border-color 0.3s ease;
     }
     .polaroid-frame:hover img { border-color: rgba(0, 0, 0, 0.5); }
-    .polaroid-frame {
-      position: relative;
-    }
     .polaroid-frame::after {
       content: "❤️";
       position: absolute;
@@ -193,6 +231,23 @@
       z-index: 10;
       text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.5);
       line-height: 1;
+    }
+    .spinner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #ffb6c1;
+      animation: spin 1s ease-in-out infinite;
+      display: none;
+      z-index: 20;
+    }
+    @keyframes spin {
+      to { transform: translate(-50%, -50%) rotate(360deg); }
     }
     #lightbox-img {
       max-height: 70vh;
@@ -261,6 +316,8 @@
       .polaroid-frame { max-width: 90vw; padding: 8px 8px 25px 8px; }
       #lightbox-img { max-height: 50vh; }
       #lightbox-note { width: 90vw; max-width: 450px; transform: rotate(0deg); font-size: 1.2rem; padding: 30px 20px 25px; }
+      .instruction-text { font-size: 1rem; white-space: normal; }
+      .instruction-box { padding: 10px 20px; }
     }
     #background-fixed {
       position: fixed;
@@ -285,6 +342,11 @@
       backdrop-filter: blur(5px);
       border: 2px solid rgba(255, 215, 0, 0.5);
       box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .gift-container:hover {
+      transform: scale(1.02);
     }
     .gift-link {
       text-decoration: none;
@@ -326,6 +388,40 @@
       0%, 100% { transform: translateX(0); }
       50% { transform: translateX(5px); }
     }
+    /* Popup thông báo */
+    .custom-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: linear-gradient(135deg, #ffb6c1, #ff99cc);
+      color: #fff;
+      padding: 20px 40px;
+      border-radius: 50px;
+      font-size: 1.8rem;
+      font-weight: bold;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(255, 105, 180, 0.6);
+      z-index: 100001;
+      opacity: 0;
+      transition: all 0.3s ease;
+      pointer-events: none;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.3);
+      white-space: nowrap;
+    }
+    .custom-popup.show {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+      pointer-events: auto;
+    }
+    @media (max-width: 768px) {
+      .custom-popup { font-size: 1.2rem; padding: 15px 25px; white-space: normal; width: 80%; text-align: center; }
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(5px); }
+    }
     @media (max-width: 768px) {
       .gift-box { font-size: 4rem; }
       .gift-emoji.large { font-size: 5rem; }
@@ -347,7 +443,7 @@
       <circle cx="50" cy="35" r="12" fill="#ff6699" />
       <path d="M42 32 Q50 20 58 32" fill="#ff99bb" />
     </svg>
-    <div class="greeting-text">Chúc mừng lên rank vàng</div>
+    <div class="greeting-text">bất ngờ chưa!!!</div>
   </div>
   <div id="balloons-container"></div>
   <canvas id="fg-canvas"></canvas>
@@ -355,38 +451,45 @@
     <div class="header-container">
       <h1 class="main-title">
         <span class="flower-icon">💐</span>
-        <span class="text-gradient">Chúc mừng lên rank vàng</span>
+        <span class="text-gradient"> CHÚC MỪNG CHỊ EM 8/3 HẠNH PHÚC</span>
         <span class="flower-icon">💐</span>
       </h1>
-      <p style="text-align:center; color:#ffe4e1; opacity:0.8; font-style:italic; margin-top:15px;">Chúc mừng lên rank vàng</p>
+      <p style="text-align:center; color:#ffe4e1; opacity:0.8; font-style:italic; margin-top:15px;">Happy international women's day</p>
+    </div>
+    <!-- Lời hướng dẫn tìm ảnh - căn giữa hoàn hảo -->
+    <div class="instruction-box">
+      <div class="instruction-text">
+        ✨ Trước hết hãy tìm ảnh chính mình đi nào ✨
+      </div>
     </div>
     <div class="stage" id="main-stage"></div>
-    <div class="gift-container">
-      <a href="https://knowae1.github.io/HistoryInvaders/" target="_blank" class="gift-link">
-        <div class="gift-box">
-          <span class="gift-emoji">🎁</span>
-          <span class="gift-emoji large">🎀</span>
-        </div>
-        <div class="gift-message">
-          <span class="arrow">👉</span>
-          <span class="text">Bấm vào đây để nhận quà!</span>
-        </div>
-      </a>
+    <div class="gift-container" id="giftButton">
+      <div class="gift-box">
+        <span class="gift-emoji">🎁</span>
+        <span class="gift-emoji large">🎀</span>
+      </div>
+      <div class="gift-message">
+        <span class="arrow">👉</span>
+        <span class="text">Bấm vào đây để nhận quà!</span>
+      </div>
     </div>
   </div>
   <div id="lightbox-overlay">
     <button id="lightbox-close">✖</button>
     <div id="lightbox-content">
       <div class="polaroid-frame">
+        <div class="spinner"></div>
         <img id="lightbox-img" src="" alt="Zoomed Memory" />
       </div>
       <div id="lightbox-note"></div>
     </div>
   </div>
+  <!-- Popup thông báo -->
+  <div id="customPopup" class="custom-popup">📢 nhìn lên máy chiếu đi 📢</div>
 
   <script>
     (function() {
-      // ========== DANH SÁCH ẢNH ==========
+      // ========== DANH SÁCH ẢNH GỐC (23 ảnh) ==========
       const imageUrls = [
         'ảnh chị em/anngo.jpg',
         'ảnh chị em/bgh.jpg',
@@ -407,133 +510,173 @@
         'ảnh chị em/tranh.jpg',
         'ảnh chị em/trdiep.jpg',
         'ảnh chị em/uyen.jpg',
-        'ảnh chị em/anngo.jpg',
-        'ảnh chị em/anngo.jpg',
-        'ảnh chị em/anngo.jpg',
-        'ảnh chị em/anngo.jpg'
+        'ảnh chị em/kngoc.jpg',
+        'ảnh chị em/mhoa.jpg',
+        'ảnh chị em/haian.jpg',
+        'ảnh chị em/ngocha.jpg'
       ];
 
       const messages = [
-        "Bức ảnh đầu tiên – khởi đầu ngọt ngào! 💕",
-        "Nụ cười của cậu làm tan chảy trái tim tớ. 🌸",
-        "Kỷ niệm này thật đẹp, nhớ mãi không quên. 📸",
-        "Cậu tỏa sáng như ánh mặt trời vậy! ☀️",
-        "Ngày hôm ấy thật vui, cảm ơn cậu vì đã ở bên. 🥰",
-        "Gửi cậu – người con gái tuyệt vời nhất. 💖",
-        "Chúc cậu luôn hạnh phúc và xinh đẹp. 🌹",
-        "Một khoảnh khắc đáng nhớ của chúng mình. 💫",
-        "Cậu làm cho thế giới này trở nên tươi đẹp hơn. 🌷",
-        "Nụ cười của cậu là món quà vô giá. 😊",
-        "Hãy luôn rạng rỡ như thế này nhé! ✨",
-        "Cảm ơn cậu vì tất cả những điều tuyệt vời. 🌺",
-        "Cậu xứng đáng với mọi điều tốt đẹp nhất. 💐",
-        "Mãi là những ký ức đẹp trong tim tớ. 💞",
-        "Chúc cậu một ngày 8/3 tràn ngập yêu thương. 🥂",
-        "Cậu là nàng thơ trong cuộc đời tớ. 🎵",
-        "Hãy luôn tự tin và tỏa sáng nhé! 🌟",
-        "Bên cạnh cậu, mọi thứ đều trở nên nhẹ nhàng. 🕊️",
-        "Tớ rất trân trọng tình bạn của chúng ta. 🤗",
-        "Cậu là một nửa tuyệt vời của thế giới. 🌍",
-        "Gửi cậu – bông hoa xinh đẹp nhất vườn. 🌼",
-        "Mong rằng cậu sẽ luôn mỉm cười. 😄",
-        "Hôm nay và mãi mãi, cậu luôn đặc biệt. 💝"
+        " Ngày 8/3, chúc Mẹ Đơn Thân sẽ thoát khỏi đồng đoàn, cũng như gặt hái thêm nhiều thành công nữa trong cuộc sống nhé!",
+        "Chúc Bùi Gia Hân một ngày 8/3 sẽ gặt hái thêm nhiều thành công trong cuộc sống nhé; đặc biệt, chúc Bùi Gia Hân sẽ đỗ nguyện vọng yêu thích của mình nhé.",
+        "Chào Bảo Ngọc, cô bạn vừa học giỏi, chăm chỉ lại còn cực kỳ hài hước nữa! 8 tháng 3 này, chúc bạn luôn giữ được năng lượng tích cực ấy và sớm đạt được aim học tập như ý muốn. Đặc biệt là chúc bạn thẳng tiến đỗ ngay nguyện vọng 1 vào trường đại học mơ ước nhé. Cố lên Ngọc ơi!",
+        "Gửi Chi Đào, cô bạn luôn chăm chỉ, giỏi giang và đặc biệt là phát âm tiếng Anh siêu hay! 8 tháng 3 này, chúc cậu gặt hái thêm thật nhiều thành công trong học tập sắp tới, và đương nhiên là phải đỗ nguyện vọng 1 nha. Cố lên, mình tin là cậu làm được",
+        "Gửi Chi Ngô, cô bạn luôn ngoan ngoãn, chăm chỉ và có siêu nhiều thành tích học tập đáng nể! 8 tháng 3 này, chúc cậu cứ mãi giữ phong độ học giỏi như vậy, gặt hái thêm thật nhiều thành công nữa và đương nhiên là sẽ đỗ nguyện vọng 1 đại học như mong đợi nhé. Đặc biệt, mong tình yêu của cậu với bạn trai luôn hạnh phúc và bền chặt nha.",
+        "Mong rằng lời chúc 8.3 của bọn mình sẽ là động lực để Minh Hằng tiếp tục cố gắng hơn nữa trong học tập; chúc cậu sẽ đạt được những số điểm SAT như mong muốn, và xa hơn nữa là sẽ đỗ vào trường đại học mình yêu thích nhé.",
+        "Chúc Hà Anh 8 tháng 3 vui vẻ nhé! Vẫn luôn hài hước và chăm chỉ như trước, năm này chúc cậu đỗ nguyện vọng 1 đại học đúng như mong đợi. Và đặc biệt, mong câu chuyện tình yêu của cậu với anh chàng bên chuyên Nguyễn Huệ luôn đẹp và lãng mạn",
+        "Chúc Hà Linh, Long của lớp, 8 tháng 3 thật vui vẻ, nhé! Vẫn luôn tích cực, năng nổ trong mọi hoạt động của lớp, năm này chúc cậu gặt hái thêm thật nhiều thành công trong học tập và đặc biệt là đỗ nguyện vọng cao như mong đợi nha",
+        "Ayyo bạn Ngân, nhân ngày Phụ nữ Việt Nam, anh em chúng tôi xin chúc bạn ngày càng xinh đẹp, nết na, duyên dáng và hơn thế là chúc cho bạn sẽ đỗ đạt nguyện vọng vào trường đại học trong mơ thật mỹ mãn nhé bạn! Chúc bạn nhiều điều may mắn hihi",
+        "Heyyo bạn Diệp, nhân dịp đặc biệt 8.3, anh em chúng tôi xin chúc bạn ngày càng hạnh phúc, vui tươi, xinh đẹp và duyên dáng nhé bạn. Và hơn nữa chúc bạn sẽ đỗ đạt nguyện vọng vào trường đại học mà bạn mơ ước nhé! Anh em luôn ủng hộ bạn.",
+        "Ngày 8/3, chúc Minh Trang thêm xinh đẹp, học giỏi; chúc cậu sẽ đạt được những thành tích mới trên con đường học tập của mình sau này nhé.",
+        "Ngày 8/3, chúc zhun sẽ có thêm nhiều thành tích mới trong học tập; chúc cậu sẽ đạt được những ước mơ của mình và bay xa hơn nữa nhé.",
+        "Chúc Thảo Nhi - lớp trưởng yêu quý của chúng ta - một ngày 8/3 thật vui vẻ; chúc Thảo Nhi thêm xinh đẹp, thêm học giỏi và sẽ đỗ vào trường đại học mà mình yêu thích nhé.",
+        "Hello bạn Ngọc Nhi, nhân ngày Phụ nữ Việt Nam, các anh em 12 Sử xin chúc bạn luôn tự tin, hạnh phúc, tràn đầy năng lượng tích cực nhé bạn yêu! Quan trọng hơn hết chúc bạn xuất ngoại Đức thành công và hoàn thành được ý nguyện của mình nhé!",
+        "Gửi Thục Anh, nhớ ngày đầu cậu nghịch ngợm siêu quậy mà giờ trầm lắng hơn nhiều rồi nhỉ. 8 tháng 3 này, chúc cậu đạt được mọi mục tiêu trong năm học cuối cấp nhé, nhất là thi tốt nghiệp đỗ ngay nguyện vọng 1 và giật cái bằng IELTS thật oách như mong đợi. Cố lên nha",
+        "Chúc Thùy Anh 8 tháng 3 vui vẻ nhé! Vẫn luôn chăm học, ngoan giỏi và đạt được nhiều thành tích như trước, năm này chúc cậu đỗ nguyện vọng 1 đại học đúng như mong đợi. Và đương nhiên, mong các tuyển thủ game mà cậu hâm mộ luôn thắng lớn, đạt giải cao nha",
+        "Chúc Trâm Anh luôn vui vẻ, xinh tươi và gặp nhiều may mắn nhé. Mong là mọi điều cậu sắp tới đều thuận lợi, để cậu cứ tự tin tỏa sáng theo cách của riêng mình.",
+        "Gửi Trịnh Diệp, cô bạn luôn chăm chỉ, học tốt, lại còn tích cực và có trách nhiệm trong các hoạt động của lớp nhóm. 8 tháng 3 này, chúc cậu gặt hái thêm thật nhiều thành công trong học tập sắp tới, và đương nhiên là phải đỗ nguyện vọng 1 đại học như mong đợi nha",
+        "Gửi Thu Uyên, cô bạn vừa ngoan vừa học giỏi, lại còn có thành tích tiếng Trung rất ấn tượng nữa! 8 tháng 3 này, chúc cậu gặt hái thêm thật nhiều thành công trong học tập sắp tới, và đương nhiên là phải đỗ nguyện vọng 1 vào trường đại học mà cậu thích nha. Cố lên nha",
+        "Gửi Khánh Ngọc, 8 tháng 3 này, chúc cậu đạt điểm IELTS cao như mong đợi trong đợt thi sắp tới, và chắc chắn là phải đỗ nguyện vọng 1 vào trường đại học mà cậu thích nữa nhé. Đặc biệt, chúc tình yêu của cậu với người bạn trai luôn hạnh phúc và bền chặt, mãi như ngày đầu nha",
+        "chúc cậu lúc nào cũng rạng rỡ, yêu đời như cái tên của cậu vậy. Hy vọng năm tới cậu sẽ làm được thật nhiều điều mình thích và luôn vui vẻ bên mọi người.",
+        "Chúc Hải An luôn bình an, vui tươi và cứ là chính mình thật thoải mái nhé. Cậu hiền lành và dễ mến lắm, mong mọi chuyện đều suôn sẻ với cậu.",
+        "Chúc Ngọc Hà lúc nào cũng vui, học tốt và luôn giữ được nụ cười dễ thương như bây giờ. Cảm ơn cậu vì đã là người bạn đáng yêu, chúc cậu thật nhiều niềm vui nhé.",
+        
       ];
 
-      // ========== MẢNG CAPTIONS (23 dòng) - BẠN CÓ THỂ SỬA TÙY Ý ==========
       const captions = [
-        "An Ngo xinh đẹp",
-        "BGH dễ thương",
-        "B Ngọc đáng yêu",
-        "Chi Down duyên dáng",
-        "Chi Ngo ngọt ngào",
-        "Hang rạng rỡ",
-        "Hanh tươi tắn",
-        "H Linh dịu dàng",
-        "H Ngan hiền hòa",
-        "M Diep kiêu sa",
-        "M Trang thanh lịch",
-        "Ngh thông minh",
-        "Nhi Tran đáng yêu",
-        "N Nhi dễ mến",
-        "Thuc năng động",
-        "Thuy nhí nhảnh",
-        "Tranh cá tính",
-        "Tr Diep dịu hiền",
-        "Uyen duyên dáng",
-        "An Ngo (2) ❤️",
-        "An Ngo (3) 💕",
-        "An Ngo (4) 💖",
-        "An Ngo (5) 💝"
+        "Anngos", "bgh", "bngoc", "chidown", "chingo", "hang", "hanh", "hlinh",
+        "hngan", "mdiep", "mtrang", "zhun", "nhitran", "nnhi", "thuc", "thuy",
+        "tranh", "trdiep", "uyen", "kngoc", "mhoa", "haian", "ngocha"
       ];
 
-      // ========== XÂY DỰNG GALLERY VỚI PLACEHOLDER ==========
+      // ========== CẤU HÌNH HÀNG ==========
+      const rowsConfig = [
+        { start: 0, count: 8, marginLeft: 0 },    // hàng 1: 8 ảnh
+        { start: 8, count: 7, marginLeft: 70 },   // hàng 2: 7 ảnh
+        { start: 15, count: 8, marginLeft: 35 }   // hàng 3: 8 ảnh
+      ];
+
+      const itemWidth = 210;
+      const gap = 18;
+      // Tốc độ: 0.08 pixel/ms = 80 pixel/giây (chậm, dễ nhìn)
+      const speed = 0.08;
+
+      // Lưu các đối tượng hàng để animate
+      const rows = [];
+
       function buildGallery() {
         const stage = document.getElementById('main-stage');
         stage.innerHTML = '';
 
-        const rows = [
-          imageUrls.slice(0, 8),
-          imageUrls.slice(8, 16),
-          imageUrls.slice(16, 23)
-        ];
-
-        const itemWidth = 210;
-        const gap = 18;
-        const speed = 90;
-
-        let globalIndex = 0; // chỉ số tổng cho tất cả các item (kể cả lặp)
-
-        rows.forEach((row, idx) => {
+        rowsConfig.forEach((cfg, idx) => {
+          const rowImages = imageUrls.slice(cfg.start, cfg.start + cfg.count);
           const lane = document.createElement('div');
           lane.className = 'lane';
-          lane.id = `lane${idx+1}`;
+          if (cfg.marginLeft) lane.style.marginLeft = cfg.marginLeft + 'px';
 
           const track = document.createElement('div');
           track.className = 'track';
 
-          const n = row.length;
-          const totalWidth = n * itemWidth + (n - 1) * gap;
-          const duration = totalWidth / speed;
-
-          track.style.setProperty('--scroll-distance', totalWidth + 'px');
-          track.style.animationDuration = duration + 's';
-
-          // Lặp 2 lần để tạo hiệu ứng vô tận
-          for (let repeat = 0; repeat < 2; repeat++) {
-            row.forEach((url, i) => {
-              const item = document.createElement('div');
-              item.className = 'item';
-
-              // Placeholder dấu hỏi
-              const placeholder = document.createElement('div');
-              placeholder.className = 'placeholder';
-              placeholder.setAttribute('data-src', url);
-              placeholder.setAttribute('data-index', globalIndex % captions.length); // lưu index theo mảng gốc
-              placeholder.innerHTML = '❓';
-
-              // Caption: lấy từ mảng captions theo globalIndex (quay vòng)
-              const caption = document.createElement('div');
-              caption.className = 'caption';
-              caption.textContent = captions[globalIndex % captions.length];
-
-              item.appendChild(placeholder);
-              item.appendChild(caption);
-              track.appendChild(item);
-
-              globalIndex++;
-            });
-          }
+          // Tạo các item (mỗi item là một ảnh riêng, không trùng)
+          rowImages.forEach((url, i) => {
+            const globalIndex = cfg.start + i;
+            const item = createItem(url, globalIndex);
+            track.appendChild(item);
+          });
 
           lane.appendChild(track);
-          if (idx === 1) lane.style.marginLeft = '70px';
-          if (idx === 2) lane.style.marginLeft = '35px';
           stage.appendChild(lane);
+
+          // Lưu thông tin hàng
+          rows.push({
+            track,
+            lane,
+            items: [...track.children],
+            itemWidth,
+            gap,
+            currentTranslate: 0,
+            lastTimestamp: null
+          });
         });
+      }
+
+      function createItem(url, globalIndex) {
+        const item = document.createElement('div');
+        item.className = 'item';
+
+        const placeholder = document.createElement('div');
+        placeholder.className = 'placeholder';
+        placeholder.setAttribute('data-src', url);
+        placeholder.setAttribute('data-index', globalIndex);
+        placeholder.innerHTML = '❓';
+
+        const caption = document.createElement('div');
+        caption.className = 'caption';
+        caption.textContent = captions[globalIndex % captions.length];
+
+        item.appendChild(placeholder);
+        item.appendChild(caption);
+        return item;
+      }
+
+      // Hàm xử lý vòng lặp vô hạn không trùng ảnh
+      function updateRow(row, deltaTime) {
+        if (!deltaTime) return;
+        // Di chuyển theo tốc độ
+        const distance = speed * deltaTime;
+        row.currentTranslate -= distance;
+
+        // Lấy width của item đầu tiên + gap
+        const firstItem = row.items[0];
+        const itemFullWidth = firstItem.offsetWidth + gap;
+
+        // Nếu dịch chuyển vượt quá chiều rộng của item đầu, chuyển item đầu xuống cuối
+        if (Math.abs(row.currentTranslate) >= itemFullWidth) {
+          // Chuyển item đầu tiên xuống cuối
+          const removedItem = row.items.shift();
+          row.items.push(removedItem);
+          row.track.appendChild(removedItem); // di chuyển trong DOM
+
+          // Điều chỉnh lại translate để giữ vị trí mượt
+          row.currentTranslate += itemFullWidth;
+        }
+
+        // Áp dụng transform
+        row.track.style.transform = `translate3d(${row.currentTranslate}px, 0, 0)`;
+      }
+
+      let lastFrameTime = null;
+      function animateRows(now) {
+        if (!lastFrameTime) {
+          lastFrameTime = now;
+          requestAnimationFrame(animateRows);
+          return;
+        }
+        const delta = Math.min(100, now - lastFrameTime); // giới hạn delta max 100ms
+        if (delta > 0) {
+          rows.forEach(row => updateRow(row, delta));
+        }
+        lastFrameTime = now;
+        requestAnimationFrame(animateRows);
       }
 
       buildGallery();
 
-      // ========== PHÁO HOA ==========
+      // Đợi một chút để DOM ổn định rồi bắt đầu animation
+      setTimeout(() => {
+        // Tính toán lại offsetWidth của các item sau khi đã render
+        rows.forEach(row => {
+          // Đảm bảo mỗi item có width chuẩn
+          if (row.items.length) {
+            // Reset translate về 0
+            row.currentTranslate = 0;
+            row.track.style.transform = `translate3d(0, 0, 0)`;
+          }
+        });
+        requestAnimationFrame(animateRows);
+      }, 100);
+
+      // ========== PHÁO HOA (giảm tải) ==========
       const canvas = document.getElementById('fg-canvas');
       const ctx = canvas.getContext('2d');
       const wrapper = document.getElementById('content-wrapper');
@@ -547,8 +690,8 @@
       class Particle {
         constructor(x, y, color, size, speedMult) {
           this.x = x; this.y = y; this.color = color; this.size = size;
-          this.velocity = { x: (Math.random() - 0.5) * (speedMult * 14), y: (Math.random() - 0.5) * (speedMult * 14) };
-          this.alpha = 1; this.friction = 0.96; this.gravity = 0.08;
+          this.velocity = { x: (Math.random() - 0.5) * (speedMult * 12), y: (Math.random() - 0.5) * (speedMult * 12) };
+          this.alpha = 1; this.friction = 0.96; this.gravity = 0.07;
         }
         draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fillStyle = this.color; ctx.globalAlpha = this.alpha; ctx.fill(); }
         update() { this.velocity.x *= this.friction; this.velocity.y *= this.friction; this.velocity.y += this.gravity; this.x += this.velocity.x; this.y += this.velocity.y; this.alpha -= 0.012; }
@@ -556,38 +699,44 @@
 
       function createFirework(x, y, isBig = false) {
         const colors = ['#ffb6c1', '#ffffff', '#ffd700', '#ff69b4', '#00f2ff', '#a0feff'];
-        const count = isBig ? 80 : 25;
+        const count = isBig ? 50 : 16;
         for (let i = 0; i < count; i++) {
-          particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)], isBig ? 2.8 : 1.6, isBig ? 1.6 : 1));
+          particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)], isBig ? 2.2 : 1.4, isBig ? 1.3 : 1));
         }
       }
 
-      function animate() {
-        requestAnimationFrame(animate);
+      function animateParticles() {
+        requestAnimationFrame(animateParticles);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles.forEach((p, i) => { if (p.alpha > 0) { p.update(); p.draw(); } else { particles.splice(i, 1); } });
+        for (let i = 0; i < particles.length; i++) {
+          if (particles[i].alpha > 0) {
+            particles[i].update();
+            particles[i].draw();
+          } else {
+            particles.splice(i, 1);
+            i--;
+          }
+        }
       }
-      animate();
+      animateParticles();
 
       // ========== BÓNG BAY ==========
       function createBalloons() {
         const container = document.getElementById('balloons-container');
         const colors = ['#ff6b9d', '#ff99cc', '#ffb3ba', '#ffd1dc', '#ffb6c1', '#fba0e0', '#fd9fc8'];
-        const numberOfBalloons = 20;
-
+        const numberOfBalloons = 20;  // bạn có thể tăng lên 25 hoặc 30 nếu muốn nhiều trái tim hơn
         for (let i = 0; i < numberOfBalloons; i++) {
           const balloon = document.createElement('div');
           balloon.className = 'balloon';
           balloon.innerHTML = '❤️';
           balloon.style.color = colors[Math.floor(Math.random() * colors.length)];
-          const size = 1.8 + Math.random() * 2;
+          const size = 1.6 + Math.random() * 1.8;
           balloon.style.fontSize = size + 'rem';
           balloon.style.left = Math.random() * 100 + '%';
           const duration = 3 + Math.random() * 3;
           balloon.style.animationDuration = duration + 's';
           balloon.style.animationDelay = (Math.random() * 2) + 's';
           container.appendChild(balloon);
-
           setTimeout(() => {
             if (balloon.parentNode) balloon.remove();
           }, (duration + parseFloat(balloon.style.animationDelay)) * 1000);
@@ -601,73 +750,97 @@
           wrapper.classList.add('show');
           wrapper.classList.add('dim-bg');
           createBalloons();
-
-          for(let i=0; i<10; i++) {
+          // Pháo hoa ban đầu: 7 loạt, mỗi loạt cách 450ms
+          for(let i = 0; i < 7; i++) {
             setTimeout(() => {
-              createFirework(Math.random() * canvas.width, Math.random() * canvas.height * 0.8, true);
-            }, i * 350);
+              createFirework(Math.random() * canvas.width, Math.random() * canvas.height * 0.7, true);
+            }, i * 450);
           }
         }, 500);
-
         setTimeout(() => {
           rose.classList.add('fade-out');
           wrapper.classList.remove('dim-bg');
         }, 7000);
       }
-
       startExperience();
 
-      // Click chuột tạo pháo hoa nhỏ
       window.addEventListener('mousedown', (e) => {
         createFirework(e.clientX, e.clientY, false);
       });
 
-      // ========== LIGHTBOX + ĐÁNH DẤU ĐÃ MỞ (VẪN CLICK LẠI ĐƯỢC) ==========
+      // ========== POPUP THÔNG BÁO ==========
+      const giftButton = document.getElementById('giftButton');
+      const popup = document.getElementById('customPopup');
+      let popupTimeout;
+
+      function showPopup() {
+        popup.classList.add('show');
+        if (popupTimeout) clearTimeout(popupTimeout);
+        popupTimeout = setTimeout(() => {
+          popup.classList.remove('show');
+        }, 3000);
+      }
+
+      giftButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        showPopup();
+      });
+
+      // ========== LIGHTBOX ==========
       const lightboxOverlay = document.getElementById('lightbox-overlay');
       const lightboxImg = document.getElementById('lightbox-img');
       const lightboxNote = document.getElementById('lightbox-note');
       const closeBtn = document.getElementById('lightbox-close');
+      const spinner = document.querySelector('.spinner');
+
+      function handleImageError(imgElement) {
+        imgElement.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Crect width="100" height="100" fill="%23ffccdd"/%3E%3Ctext x="50" y="55" font-size="40" text-anchor="middle" fill="%23ff6699"%3E🌸%3C/text%3E%3C/svg%3E';
+      }
 
       document.getElementById('main-stage').addEventListener('click', function(e) {
         const placeholder = e.target.closest('.placeholder');
         if (!placeholder) return;
-
-        // Lấy thông tin ảnh và index
         const src = placeholder.getAttribute('data-src');
-        const index = placeholder.getAttribute('data-index');
-        
+        const index = parseInt(placeholder.getAttribute('data-index'));
         if (src) {
-          lightboxImg.src = src;
-          if (index !== null && messages[parseInt(index)]) {
-            lightboxNote.innerHTML = `<p><strong>Gửi chị em 12 sử,</strong><br><br>${messages[parseInt(index)]}</p>`;
+          spinner.style.display = 'block';
+          lightboxImg.style.opacity = '0';
+          const img = new Image();
+          img.onload = () => {
+            lightboxImg.src = src;
+            lightboxImg.style.opacity = '1';
+            spinner.style.display = 'none';
+          };
+          img.onerror = () => {
+            handleImageError(lightboxImg);
+            lightboxImg.style.opacity = '1';
+            spinner.style.display = 'none';
+          };
+          img.src = src;
+          if (!isNaN(index) && messages[index]) {
+            lightboxNote.innerHTML = `<p><strong>Gửi chị em 12 sử,</strong><br><br>${messages[index]}</p>`;
           } else {
             lightboxNote.innerHTML = `<p><strong>Gửi chị em 12 sử,</strong><br><br>Chúc chị em một ngày 8/3 thật rực rỡ! 💖💐</p>`;
           }
           lightboxOverlay.classList.add('active');
-
-          // Nếu chưa có class opened, thêm vào và đổi icon thành trái tim
           if (!placeholder.classList.contains('opened')) {
             placeholder.innerHTML = '💕';
             placeholder.classList.add('opened');
           }
         }
-        
         e.stopPropagation();
       });
 
       function closeLightbox() {
         lightboxOverlay.classList.remove('active');
       }
-
       closeBtn.addEventListener('click', closeLightbox);
-      lightboxOverlay.addEventListener('click', function(e) {
+      lightboxOverlay.addEventListener('click', (e) => {
         if (e.target === lightboxOverlay) closeLightbox();
       });
-
-      window.addEventListener('keydown', function(e) {
+      window.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') closeLightbox();
       });
-
     })();
   </script>
 </body>
